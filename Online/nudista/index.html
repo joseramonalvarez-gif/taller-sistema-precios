@@ -5,8 +5,8 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Presentación · Psicología de precios</title>
-<link rel="stylesheet" href="../vendor/fonts-amurai.css">
-<link rel="stylesheet" href="../vendor/tabler.css">
+<link rel="stylesheet" href="../../vendor/fonts-amurai.css">
+<link rel="stylesheet" href="../../vendor/tabler.css">
 <style>
   html, body { margin:0; padding:0; height:100%; background:#191919; color:#fff; overflow:hidden; }
   #root { height:100vh; width:100vw; }
@@ -22,8 +22,8 @@
   @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
 </style>
 <!-- React 18 + Babel Standalone (compilación JSX en el navegador) -->
-<script src="../vendor/react.production.min.js"></script>
-<script src="../vendor/react-dom.production.min.js"></script>
+<script src="../../vendor/react.production.min.js"></script>
+<script src="../../vendor/react-dom.production.min.js"></script>
 </head>
 <body>
 <div id="__boot">Cargando presentación<span class="dot"></span></div>
@@ -414,8 +414,8 @@ const PatroBar = () => /*#__PURE__*/React.createElement("div", {
 }, "PATROCINA"), /*#__PURE__*/React.createElement("span", {
   style: {
     background: W,
-    borderRadius: 4,
-    padding: "4px 8px",
+    borderRadius: 5,
+    padding: "2px 9px",
     display: "inline-flex",
     alignItems: "center"
   }
@@ -423,7 +423,7 @@ const PatroBar = () => /*#__PURE__*/React.createElement("div", {
   src: PATRO,
   alt: "nudista INVESTOR",
   style: {
-    height: 15,
+    height: 30,
     width: "auto",
     display: "block"
   }
@@ -438,7 +438,7 @@ const PatroBloque = ({
     display: "inline-flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: 11,
+    gap: 8,
     animationDelay: delay,
     marginTop: mt
   }
@@ -453,7 +453,7 @@ const PatroBloque = ({
   style: {
     background: W,
     borderRadius: 12,
-    padding: "15px 28px",
+    padding: "13px 26px",
     display: "inline-flex",
     alignItems: "center"
   }
@@ -856,7 +856,7 @@ function Portada() {
     }
   }, "PASO 6 DE 6 \u2014 SISTEMA DE PRECIOS")), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 26
+      marginTop: 18
     }
   }, /*#__PURE__*/React.createElement(PatroBloque, {
     h: 30,
@@ -3559,7 +3559,7 @@ function CierreGracias() {
     }
   }, "AMURAI \xB7 NUNCA CAMINAR\xC1S SOLO")), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 26
+      marginTop: 18
     }
   }, /*#__PURE__*/React.createElement(PatroBloque, {
     h: 32,
@@ -4075,8 +4075,8 @@ function PresentacionNA() {
         document.head.appendChild(l);
       }
     };
-    addLink("../vendor/fonts-amurai.css");
-    addLink("../vendor/tabler.css");
+    addLink("../../vendor/fonts-amurai.css");
+    addLink("../../vendor/tabler.css");
     const style = document.createElement("style");
     style.textContent = CSS;
     document.head.appendChild(style);
