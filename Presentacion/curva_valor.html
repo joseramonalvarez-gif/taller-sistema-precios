@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curva de valor · Paso 2</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+  :root{
+    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
+    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --azul:#79b0e6; --cobre:#d99c6e; --verde:#6db86b; --rojo:#e0533d; --linea:#2a2a26;
+    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
+  .wrap{max-width:1500px;margin:0 auto}
+
+  header.top{margin-bottom:10px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3vw,32px);line-height:1.05;letter-spacing:-.01em}
+  h1 .em{color:var(--mostaza)}
+  .lead{margin-top:6px;font-size:15.5px;line-height:1.45;color:var(--gris);max-width:88ch;margin-left:auto;margin-right:auto}
+
+  .casos{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0 14px}
+  .casos .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+  .chip{font-size:13px;font-weight:600;background:transparent;color:var(--blanco);border:1px solid var(--mostaza-dim);padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .15s}
+  .chip:hover{background:var(--mostaza);color:var(--negro);border-color:var(--mostaza)}
+  .chip.ghost{border-color:var(--linea);color:var(--gris)}
+
+  /* Guía desplegable */
+  .guia{max-width:1500px;margin:0 auto 16px}
+  .guia-btn{width:100%;background:var(--carbon);border:1px solid var(--mostaza-dim);border-radius:12px;color:var(--mostaza);
+    font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.04em;padding:13px 18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+  .guia-btn:hover{background:var(--carbon-2)}
+  .guia-btn .arr{transition:transform .2s}
+  .guia.open .guia-btn .arr{transform:rotate(180deg)}
+  .guia-body{display:none;background:var(--negro-2);border:1px solid var(--linea);border-top:0;border-radius:0 0 12px 12px;padding:6px 18px 14px;margin-top:-6px}
+  .guia.open .guia-body{display:block}
+  .guia-body .g{padding:11px 0;border-bottom:1px solid var(--carbon)}
+  .guia-body .g:last-child{border-bottom:0}
+  .guia-body .g h4{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--blanco);margin-bottom:4px}
+  .guia-body .g h4 b{color:var(--mostaza)}
+  .guia-body .g p{font-size:14.5px;color:var(--gris);line-height:1.55}
+
+  .panel{background:var(--carbon);border:1px solid var(--linea);border-radius:16px;padding:clamp(14px,2vw,22px)}
+
+  /* Gráfico */
+  .chartwrap{margin:2px 0 6px}
+  .chartwrap svg{width:100%;height:auto;max-height:30vh;display:block}
+  .legend{display:flex;gap:20px;justify-content:center;margin:6px 0 2px;font-family:var(--mono);font-size:13.5px;color:var(--gris);flex-wrap:wrap}
+  .legend .k{display:inline-flex;align-items:center;gap:6px}
+  .legend .sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+
+  .scaleNote{text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--mostaza);letter-spacing:.04em;margin:4px 0 6px}
+  .rule{height:0;border-top:1.5px solid var(--linea);margin:14px 0}
+  .rule.strong{border-top-color:var(--mostaza-dim)}
+
+  /* Tabla de variables */
+  table{width:100%;border-collapse:collapse;font-size:15.5px}
+  thead th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600;text-align:center;padding:7px 6px;border-bottom:1px solid var(--linea);vertical-align:bottom}
+  thead th:first-child{text-align:left;width:34%}
+  tbody td{padding:6px 6px;border-bottom:1px solid var(--negro-2);text-align:center;vertical-align:middle}
+  tbody td:first-child{text-align:left}
+
+  .serie-in{width:100%;max-width:150px;background:var(--negro-2);border:1px solid var(--linea);border-radius:7px;color:var(--blanco);
+    font-family:var(--sans);font-weight:700;font-size:14px;text-align:center;padding:7px 6px}
+  .serie-in:focus{outline:none;border-color:var(--mostaza)}
+  .serie-in.tu{color:var(--mostaza)} .serie-in.low{color:var(--azul)} .serie-in.prem{color:var(--cobre)}
+
+  .var-in{width:100%;background:var(--negro-2);border:1px solid var(--linea);border-radius:7px;color:var(--blanco);
+    font-family:var(--sans);font-weight:600;font-size:15px;padding:9px 11px}
+  .var-in:focus{outline:none;border-color:var(--mostaza)}
+  .var-in::placeholder{color:#5a5a55;font-weight:400}
+  .var-fixed{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:15.5px;color:var(--blanco);padding:8px 4px}
+  .var-fixed .pin{font-family:var(--mono);font-size:9px;letter-spacing:.1em;background:var(--mostaza);color:var(--negro);border-radius:4px;padding:2px 6px}
+
+  .dotscale{display:inline-flex;gap:5px}
+  .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--linea);background:var(--negro-2);cursor:pointer;transition:transform .1s,background .12s,border-color .12s}
+  .dot:hover{transform:scale(1.18)}
+
+  .msg{margin-top:18px;padding:18px 22px;border-radius:14px;background:linear-gradient(145deg,var(--carbon-2),var(--negro-2));border:1px solid var(--mostaza-dim);font-size:16.5px;line-height:1.6}
+  .msg b.sep{color:var(--mostaza);font-weight:700}
+  .msg b.tie{color:var(--azul);font-weight:700}
+  .msg .rice{display:block;margin-top:9px;font-size:15px;color:var(--gris)}
+  .msg.empty{background:var(--negro-2);border:1px dashed var(--linea);color:var(--gris);font-size:14.5px}
+
+  /* 16:9 — gráfico + tabla a la izquierda; matriz "plan" (4 acciones) a la derecha */
+  .split{display:block}
+  @media(min-width:1040px){
+    .split{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;align-items:start}
+    .split .errc-box{margin-top:0;border-top:0;padding-top:0;border-left:1.5px solid var(--mostaza-dim);padding-left:34px}
+    .split .errc-grid{grid-template-columns:1fr;gap:12px}
+  }
+  .errc-box{margin-top:16px;border-top:1.5px solid var(--mostaza-dim);padding-top:14px}
+  .errc-head{text-align:center;margin-bottom:12px}
+  .errc-head .t{font-family:var(--serif);font-weight:600;font-size:clamp(17px,2vw,22px);color:var(--blanco)}
+  .errc-head .s{font-size:13.5px;color:var(--gris);margin-top:4px}
+  .errc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.errc-grid{grid-template-columns:1fr}}
+  .ecard{background:var(--negro-2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px}
+  .ecard .eh{font-family:var(--sans);font-weight:800;font-size:14px;letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .ecard .eh .tag{font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:2px 6px;border-radius:4px}
+  .ecard.elim,.ecard.red{border-color:#33597a} .ecard.elim .eh,.ecard.red .eh{color:var(--azul)}
+  .ecard.elim .tag,.ecard.red .tag{background:rgba(91,155,213,.16);color:var(--azul)}
+  .ecard.elev,.ecard.crea{border-color:var(--mostaza-dim)} .ecard.elev .eh,.ecard.crea .eh{color:var(--mostaza)}
+  .ecard.elev .tag,.ecard.crea .tag{background:rgba(232,194,35,.14);color:var(--mostaza)}
+  .ecard textarea{width:100%;resize:vertical;min-height:54px;background:transparent;border:0;color:var(--blanco);
+    font-family:var(--sans);font-weight:500;font-size:14.5px;line-height:1.5;padding:0}
+  .ecard textarea:focus{outline:none}
+  .ecard textarea::placeholder{color:#5a5a55;font-weight:400}
+
+  footer.brand{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Paso 2 · La curva de valor</div>
+    <h1>¿En qué compites <span class="em">de verdad?</span></h1>
+    <div class="lead">Escribe las 6 variables en las que se decide tu cliente (el precio siempre es una). Puntúa de 1 a 5 tu nivel y el de dos competidores. Donde tu línea se despega está tu posicionamiento.</div>
+  </header>
+
+  <div class="casos">
+    <span class="lbl">Empezar</span>
+    <button class="chip ghost" onclick="cargar('blanco')">Hoja en blanco</button>
+    <button class="chip" onclick="cargar('climatizacion')">Ver ejemplo: climatización</button>
+  </div>
+</div>
+
+<div class="guia" id="guia">
+  <button class="guia-btn" onclick="document.getElementById('guia').classList.toggle('open')">
+    <span>¿Cómo se interpreta una curva de valor?</span><span class="arr">▾</span>
+  </button>
+  <div class="guia-body">
+    <div class="g"><h4>1 · <b>Qué es una variable competitiva</b></h4><p>Un factor en el que tu sector compite y en el que las empresas invierten para dar valor: precio, plazo, asesoramiento, calidad, garantía… Elige las 6 en las que de verdad se decide tu cliente.</p></div>
+    <div class="g"><h4>2 · <b>Por qué afecta al posicionamiento</b></h4><p>No es una variable suelta: es la <i>forma</i> de tu curva frente a la de los demás. El conjunto de tus niveles dibuja cómo te ve el mercado.</p></div>
+    <div class="g"><h4>3 · <b>Cómo se lee la puntuación (1–5)</b></h4><p>Más alto = más inversión y más valor en esa variable (también el precio: 5 = más caro / premium). 1 = mínimo o inexistente.</p></div>
+    <div class="g"><h4>4 · <b>Qué dice la comparación</b></h4><p>Donde tu línea coincide con la competencia, compites en su mismo terreno (riesgo de guerra de precios). Donde se despega hacia arriba, ahí está tu diferenciación; hacia abajo, ahí eres más accesible (a propósito… o no).</p></div>
+    <div class="g"><h4>5 · <b>Qué oportunidades aparecen — las 4 acciones</b></h4><p><b>Reducir</b> / <b>Eliminar</b> lo que el cliente no valora → bajas coste. <b>Incrementar</b> / <b>Crear</b> lo que sí valora → subes valor. Una curva ganadora no es la más alta en todo: es la más <i>distinta</i> donde importa.</p></div>
+    <div class="g"><h4>6 · <b>Cómo conecta con precio, margen y propuesta de valor</b></h4><p>Incrementar/crear justifica un precio mayor; reducir/eliminar baja tu coste y protege el margen. La meta océano azul: más valor a menor coste a la vez.</p></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="panel">
+   <div class="split">
+    <div class="split-l">
+      <div class="chartwrap" id="chartwrap"></div>
+      <div class="legend" id="legend"></div>
+      <div class="scaleNote">Escala 1–5 · más alto = más inversión = más valor</div>
+      <div class="rule strong"></div>
+      <div id="tablewrap"></div>
+      <div class="msg empty" id="msg">Carga el ejemplo de climatización o escribe tus propias variables para construir la curva.</div>
+    </div>
+
+     <div class="errc-box">
+      <div class="errc-head">
+        <div class="t">Tu curva, convertida en <span style="color:var(--mostaza)">plan</span>: 4 movimientos</div>
+        <div class="s">Eliminar y Reducir bajan tu coste · Elevar y Crear suben tu valor.</div>
+      </div>
+      <div class="errc-grid">
+        <div class="ecard elim"><div class="eh"><span class="tag">↓ COSTE</span> Eliminar</div><textarea data-errc="eliminar" placeholder="¿Qué quitas del todo? Lo que el cliente no valora…"></textarea></div>
+        <div class="ecard elev"><div class="eh"><span class="tag">↑ VALOR</span> Elevar</div><textarea data-errc="elevar" placeholder="¿Qué subes por encima del sector? Donde te diferencias…"></textarea></div>
+        <div class="ecard red"><div class="eh"><span class="tag">↓ COSTE</span> Reducir</div><textarea data-errc="reducir" placeholder="¿Qué recortas por debajo del estándar? Lo que sobra…"></textarea></div>
+        <div class="ecard crea"><div class="eh"><span class="tag">↑ VALOR</span> Crear</div><textarea data-errc="crear" placeholder="¿Qué ofreces que nadie da? Algo nuevo para el cliente…"></textarea></div>
+      </div>
+     </div>
+   </div>
+  </section>
+
+  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+</div>
+
+<script>
+const SERIES=[
+  {key:'tu',  label:'Tú',                  color:'#E8C223', w:3.2, cls:'tu'},
+  {key:'low', label:'Competidor low cost', color:'#79b0e6', w:2.6, cls:'low'},
+  {key:'prem',label:'Competidor premium',  color:'#d99c6e', w:2.6, cls:'prem'}
+];
+// Variable 0 = Precio (fija, siempre presente). Las otras 5 las define el usuario.
+let VARS=['Precio','','','','',''];
+let data={ tu:[3,3,3,3,3,3], low:[3,3,3,3,3,3], prem:[3,3,3,3,3,3] };
+let ERRC={eliminar:'',reducir:'',elevar:'',crear:''};
+
+const EJEMPLOS={
+  climatizacion:{
+    vars:['Precio','Asesoramiento / proyecto','Rapidez de instalación','Eficiencia de los equipos','Postventa y mantenimiento','Garantía y tranquilidad'],
+    tu:  [4,5,4,4,5,5],
+    low: [2,1,4,2,1,2],
+    prem:[5,3,3,5,3,4],
+    errc:{
+      eliminar:'El presupuesto genérico por email, sin pisar la casa.',
+      reducir:'La gama infinita de marcas que marea al cliente.',
+      elevar:'Asesoramiento técnico, eficiencia y postventa.',
+      crear:'Plan de mantenimiento anual + garantía extendida + financiación.'
+    }
+  }
+};
+
+function trunc(s,n){ s=s||''; return s.length>n ? s.slice(0,n-1)+'…' : s; }
+
+/* ---------- TABLA (se construye una vez por carga) ---------- */
+function renderTable(){
+  let h='<table><thead><tr><th>Variable competitiva</th>';
+  SERIES.forEach(se=>{ h+='<th><input class="serie-in '+se.cls+'" data-serie="'+se.key+'" value="'+se.label.replace(/"/g,'&quot;')+'"></th>'; });
+  h+='</tr></thead><tbody>';
+  VARS.forEach((vn,i)=>{
+    h+='<tr>';
+    if(i===0){
+      h+='<td><div class="var-fixed"><span class="pin">PRECIO</span> Precio</div></td>';
+    } else {
+      h+='<td><input class="var-in" data-var="'+i+'" value="'+(vn||'').replace(/"/g,'&quot;')+'" placeholder="Escribe tu variable…"></td>';
+    }
+    SERIES.forEach(se=>{ h+='<td>'+dotscale(se.key,i,se.color)+'</td>'; });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('tablewrap').innerHTML=h;
+
+  // listeners de etiquetas de serie (no rerender de tabla → no pierde foco)
+  document.querySelectorAll('.serie-in').forEach(inp=>{
+    inp.addEventListener('input',()=>{ SERIES.find(s=>s.key===inp.dataset.serie).label=inp.value; drawChart(); legendRender(); setMsg(); });
+  });
+  // listeners de nombres de variable
+  document.querySelectorAll('.var-in').forEach(inp=>{
+    inp.addEventListener('input',()=>{ VARS[+inp.dataset.var]=inp.value; drawChart(); setMsg(); });
+  });
+}
+function dotscale(serieKey,varIdx,color){
+  const v=data[serieKey][varIdx];
+  let s='<span class="dotscale" data-serie="'+serieKey+'" data-var="'+varIdx+'">';
+  for(let i=1;i<=5;i++){ const on=i<=v;
+    s+='<span class="dot" data-i="'+i+'" style="'+(on?'background:'+color+';border-color:'+color:'')+'"></span>'; }
+  return s+'</span>';
+}
+// clic en punto → actualiza estado y repinta SOLO ese dotscale + gráfico + mensaje
+document.getElementById('tablewrap').addEventListener('click',e=>{
+  const dot=e.target.closest('.dot'); if(!dot)return;
+  const sc=dot.closest('.dotscale'); const serie=sc.dataset.serie, vi=+sc.dataset.var, val=+dot.dataset.i;
+  data[serie][vi]=val;
+  const color=SERIES.find(s=>s.key===serie).color;
+  [...sc.querySelectorAll('.dot')].forEach((d,idx)=>{ const on=(idx+1)<=val;
+    d.style.background=on?color:''; d.style.borderColor=on?color:''; });
+  drawChart(); setMsg();
+});
+
+/* ---------- GRÁFICO ---------- */
+function legendRender(){
+  document.getElementById('legend').innerHTML=SERIES.map(se=>
+    '<span class="k"><span class="sw" style="background:'+se.color+'"></span> '+(trunc(se.label,22)||'—')+'</span>').join('');
+}
+function drawChart(){
+  const wrap=document.getElementById('chartwrap');
+  const W=760,H=300,padL=24,padR=24,padT=22,padB=46;
+  const n=VARS.length;
+  const x=i=> padL + (W-padL-padR)*(n===1?0.5:i/(n-1));
+  const y=v=> padT + (H-padT-padB)*(1-(v-1)/4);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  for(let lvl=1;lvl<=5;lvl++){
+    s+='<line x1="'+padL+'" y1="'+y(lvl)+'" x2="'+(W-padR)+'" y2="'+y(lvl)+'" stroke="#1f1f1f" stroke-width="1"/>';
+    s+='<text x="'+(padL-8)+'" y="'+(y(lvl)+3)+'" fill="#bdb9ad" font-family="JetBrains Mono,monospace" font-size="11" text-anchor="end">'+lvl+'</text>';
+  }
+  VARS.forEach((vn,i)=>{
+    s+='<line x1="'+x(i)+'" y1="'+padT+'" x2="'+x(i)+'" y2="'+(H-padB)+'" stroke="#1f1f1f" stroke-width="1"/>';
+    const lbl=trunc(vn,14)||('Var '+(i+1));
+    s+='<text x="'+x(i)+'" y="'+(H-padB+18)+'" fill="#d8d4c8" font-family="Manrope,sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">'+lbl+'</text>';
+  });
+  // competidores primero, tú encima
+  [SERIES[1],SERIES[2],SERIES[0]].forEach(se=>{
+    const pts=data[se.key].map((v,i)=>x(i)+','+y(v)).join(' ');
+    s+='<polyline fill="none" stroke="'+se.color+'" stroke-width="'+se.w+'" stroke-linejoin="round" points="'+pts+'" opacity="'+(se.key==='tu'?1:0.85)+'"/>';
+    data[se.key].forEach((v,i)=>{ s+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="'+(se.key==='tu'?4.5:3)+'" fill="'+se.color+'"/>'; });
+  });
+  wrap.innerHTML=s+'</svg>';
+}
+
+/* ---------- LECTURA (clave RICE) ---------- */
+function setMsg(){
+  const msg=document.getElementById('msg');
+  const named=VARS.map((vn,i)=>({i,name:(vn||'').trim()})).filter(o=>o.name);
+  const tuL=SERIES[0].label||'tú';
+  const up=[], tieHigh=[];
+  named.forEach(o=>{
+    const comp=Math.max(data.low[o.i],data.prem[o.i]);
+    if(data.tu[o.i]>comp) up.push(o.name);
+    else if(data.tu[o.i]===comp && data.tu[o.i]>=4) tieHigh.push(o.name);
+  });
+  if(named.length===0){ msg.className='msg empty';
+    msg.textContent='Escribe tus variables (o carga el ejemplo) y puntúa las tres líneas para ver tu lectura.'; return; }
+  if(up.length===0){ msg.className='msg';
+    msg.innerHTML='Tu curva no se despega de la competencia en ninguna variable nombrada: compites en su mismo terreno, y eso casi siempre acaba en <b class="tie">guerra de precios</b>.'
+      +'<span class="rice">Las 4 acciones: <b>incrementa</b> o <b>crea</b> una variable donde el cliente note la diferencia. Esa es tu salida.</span>'; return; }
+  msg.className='msg';
+  let html='Donde más te separas: <b class="sep">'+up.slice(0,2).join('</b> y <b class="sep">')+'</b>. Ahí está tu posicionamiento — eso justifica tu precio. <b>Refuérzalo</b> o crea aún más distancia.';
+  if(tieHigh.length){
+    html+='<span class="rice">Inviertes lo mismo que la competencia en <b class="tie">'+tieHigh.slice(0,2).join('</b>, <b class="tie">')+'</b>: si el cliente no lo valora especialmente, ahí puedes <b>reducir o eliminar</b> y bajar coste sin perder posición.</span>';
+  } else {
+    html+='<span class="rice">Y mira dónde inviertes igual que todos: si el cliente no lo nota, reducir o eliminar ahí baja tu coste sin perder posición (más valor a menor coste).</span>';
+  }
+  msg.innerHTML=html;
+}
+
+/* ---------- LIENZO ERRC ---------- */
+function fillERRC(){
+  document.querySelectorAll('[data-errc]').forEach(t=>{ t.value=ERRC[t.dataset.errc]||''; });
+}
+document.querySelectorAll('[data-errc]').forEach(t=>{
+  t.addEventListener('input',()=>{ ERRC[t.dataset.errc]=t.value; });
+});
+
+/* ---------- CARGA ---------- */
+function cargar(n){
+  if(n==='blanco'){
+    VARS=['Precio','','','','',''];
+    data={tu:[3,3,3,3,3,3],low:[3,3,3,3,3,3],prem:[3,3,3,3,3,3]};
+    ERRC={eliminar:'',reducir:'',elevar:'',crear:''};
+  } else {
+    const e=EJEMPLOS[n]; if(!e)return;
+    VARS=[...e.vars];
+    data={tu:[...e.tu],low:[...e.low],prem:[...e.prem]};
+    ERRC=e.errc?{...e.errc}:{eliminar:'',reducir:'',elevar:'',crear:''};
+  }
+  renderTable(); legendRender(); drawChart(); setMsg(); fillERRC();
+}
+
+// Precarga por hash (desde el iframe de paso2.html): curva_valor.html#climatizacion | #blanco
+const h=location.hash.slice(1);
+cargar(EJEMPLOS[h]?h:(h==='blanco'?'blanco':'blanco'));
+</script>
+</body>
+</html>

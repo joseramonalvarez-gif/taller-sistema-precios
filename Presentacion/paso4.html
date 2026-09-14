@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso 4 — La escalera de precios · slides (contenido)</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<!-- Contenido del Paso 4 SIN header/footer/chrome. El chrome (logo, navegación, contador) lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
+<!-- TEXTO DE PANTALLA (capa profesional). El guion fino hablado lo pone Antonio sobre esta base. Ver 05_entregables/Paso4_escaleta_v1.md -->
+<style>
+  :root{
+    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
+    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b; --azul:#5b9bd5;
+    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--BG);color:var(--W);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+
+  .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
+  .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
+    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+  .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
+  .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
+  .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
+
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(36px,5vw,72px) clamp(40px,8vw,120px);text-align:center}
+  .slide.active{display:flex}
+  .slide::before{content:"";position:absolute;inset:0;background-image:
+    linear-gradient(var(--C2) 1px,transparent 1px),linear-gradient(90deg,var(--C2) 1px,transparent 1px);
+    background-size:52px 52px;opacity:.18;pointer-events:none}
+  .frame-t{position:absolute;top:0;left:8%;right:8%;height:2px;background:var(--Y);z-index:1}
+  .frame-b{position:absolute;bottom:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--Y),transparent);z-index:1}
+  .slide>*{position:relative;z-index:2}
+
+  .kicker{font-family:var(--sans);font-size:clamp(10px,1.1vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--Y);margin-bottom:clamp(16px,2.4vw,30px)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,64px);line-height:1.06;max-width:20ch}
+  .em{color:var(--Y)}
+  .lead{font-family:var(--serif);font-size:clamp(20px,3vw,38px);line-height:1.22;max-width:24ch;color:var(--W)}
+  .body{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);line-height:1.6;color:var(--GR);max-width:40ch}
+  .regla{font-family:var(--serif);font-weight:600;font-size:clamp(20px,2.8vw,36px);color:var(--Y);max-width:26ch}
+  .nota{font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);color:var(--GR);max-width:44ch;line-height:1.5}
+
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .slide.active>*{animation:fadeIn .3s ease both}
+  .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+  .frag.on{opacity:1;transform:none}
+
+  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.32);padding:18px 22px}
+
+  /* Eje de posicionamiento */
+  .eje{display:flex;justify-content:space-between;width:min(72vw,640px);margin-top:30px}
+  .eje span{font-family:var(--serif);font-size:clamp(20px,2.8vw,36px);color:var(--GR)}
+  .eje span.valor{color:var(--Y);font-weight:600}
+  .ejebar{width:min(72vw,640px);height:4px;margin-top:12px;border-radius:3px;background:linear-gradient(90deg,var(--C3),var(--C4),var(--Y))}
+
+  /* Dos ramas */
+  .ramas{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,28px);width:min(90vw,860px);margin-top:8px}
+  @media(max-width:640px){.ramas{grid-template-columns:1fr}}
+  .rama{text-align:left}
+  .rama h3{font-family:var(--sans);font-weight:700;font-size:clamp(16px,2vw,24px);color:var(--Y);margin-bottom:10px;letter-spacing:.02em}
+  .rama p{font-family:var(--serif);font-size:clamp(16px,1.7vw,21px);color:var(--GR);line-height:1.5}
+  .oro{margin-top:22px;font-family:var(--serif);font-weight:600;font-size:clamp(17px,2.2vw,28px);color:var(--Y);max-width:30ch}
+
+  /* Cascada / centro de cifras */
+  .casc{display:inline-grid;grid-template-columns:auto auto;gap:.35em 1.6em;font-family:var(--mono);font-size:clamp(17px,2.4vw,32px);text-align:left;
+    background:var(--C1);border:1px solid var(--C3);border-radius:14px;padding:clamp(18px,2.4vw,30px) clamp(22px,3vw,40px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .casc .r{text-align:right;font-variant-numeric:tabular-nums}
+  .casc .mc{color:var(--Y);font-weight:700}
+  .rule{height:2px;background:linear-gradient(90deg,transparent,var(--Y),transparent);grid-column:1/3;margin:.25em 0}
+
+  /* Escalera SVG */
+  .stairwrap{width:min(80vw,620px)}
+  .stairwrap svg{width:100%;height:auto;display:block}
+
+  /* Diagrama de escalera (caso torreznos · mismos importes que la calculadora) */
+  .escD{width:min(88vw,860px);display:flex;flex-direction:column-reverse;gap:clamp(5px,0.9vh,9px);margin-top:4px}
+  .escD .row{display:flex;align-items:center;gap:14px}
+  .escD .bar{position:relative;height:clamp(26px,4vh,42px);border:1px solid var(--C3);border-radius:8px;
+    background:linear-gradient(90deg,var(--C1),var(--C2));display:flex;align-items:center;justify-content:flex-end;
+    padding:0 14px;flex:0 0 auto;box-shadow:0 1px 6px rgba(0,0,0,.3)}
+  .escD .price{font-family:var(--mono);font-weight:700;font-size:clamp(14px,1.9vw,23px);color:var(--W)}
+  .escD .row.salida .bar{border-color:var(--Y);background:linear-gradient(90deg,rgba(232,194,35,.10),rgba(232,194,35,.24))}
+  .escD .row.salida .price{color:var(--Y)}
+  .escD .tag{font-family:var(--sans);font-size:clamp(12px,1.2vw,14px);letter-spacing:.04em;color:var(--Y);font-weight:700;white-space:nowrap}
+  .escD .tag.dim{color:var(--GR);font-weight:500}
+  .meta{display:flex;gap:clamp(14px,2.4vw,30px);justify-content:center;flex-wrap:wrap;margin-top:14px;
+    font-family:var(--mono);font-size:clamp(13px,1.3vw,15px);color:var(--GR)}
+  .meta b{color:var(--W)} .meta .up{color:var(--verde)}
+
+  /* Calculadora integrada */
+  .slide.calc{padding:6px 10px}
+  .slide.calc iframe{width:min(1460px,98vw);height:100%;border:0;border-radius:10px;background:var(--BG)}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- ===== 4.1 — PUENTE DESDE EL PASO 3 ===== -->
+  <section class="slide" data-blk="Puente desde el Paso 3">
+    <div class="frame-t"></div>
+    <div class="kicker">Paso 4 · La escalera de precios</div>
+    <div class="lead frag">Ya sabes lo que te cuesta y cuánto necesitas vender.</div>
+    <h1 class="frag" style="margin-top:20px">La pregunta ahora: <span class="em">¿a qué precio juegas?</span></h1>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.2 — TU PRECIO TE POSICIONA ===== -->
+  <section class="slide" data-blk="Tu precio te posiciona">
+    <div class="frame-t"></div>
+    <div class="kicker">Tu precio te posiciona</div>
+    <div class="lead frag">El mismo producto cambia de percepción según dónde pongas el precio.</div>
+    <div class="eje frag"><span>Básico</span><span>Medio</span><span class="valor">Premium</span></div>
+    <div class="ejebar frag"></div>
+    <div class="body frag" style="margin-top:28px">El precio no se sostiene solo: necesita <b style="color:var(--W)">propuesta de valor</b>, <b style="color:var(--W)">comunicación</b> y <b style="color:var(--W)">atributos</b> que lo justifiquen.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.3 — MOVER VERTICALES: LAS DOS RAMAS ===== -->
+  <section class="slide" data-blk="Mover verticales">
+    <div class="frame-t"></div>
+    <div class="kicker">Mover verticales · las dos ramas</div>
+    <div class="ramas frag">
+      <div class="rama card">
+        <h3>↓ Hacia accesible</h3>
+        <p>Quitas atributos que no aportan · bajas el coste · más rotación. Vendes más barato, pero con margen sano.</p>
+      </div>
+      <div class="rama card">
+        <h3>↑ Hacia premium</h3>
+        <p>Potencias atributos · el mercado acepta más precio. El coste extra lo absorbe el nuevo margen.</p>
+      </div>
+    </div>
+    <div class="oro frag">El punto de oro: subir mucho el valor percibido sin disparar el coste.</div>
+    <div class="nota frag" style="margin-top:14px">Las dos ramas valen. La jugada lista no es subir siempre: es decidir con criterio.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.4 — LA ESCALERA = PRECIOS DINÁMICOS ===== -->
+  <section class="slide" data-blk="La escalera">
+    <div class="frame-t"></div>
+    <div class="kicker">La herramienta</div>
+    <h1 class="frag">Como una aerolínea cambia precios cada día… <span class="em">pero a tu medida.</span></h1>
+    <div class="body frag" style="margin-top:26px;max-width:34ch">Un sistema para subir márgenes, subir ventas, o las dos. Con criterio, no a ojo.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.5 — MÉTODO · PASO 1: LA HORQUILLA ===== -->
+  <section class="slide" data-blk="El método · la horquilla">
+    <div class="frame-t"></div>
+    <div class="kicker">El método · paso 1 de 4 · La horquilla</div>
+    <div class="stairwrap frag" data-stair="horquilla"></div>
+    <div class="regla frag" style="margin-top:18px">Determina tu <span class="em">horquilla</span> de precios: del mínimo al máximo.</div>
+    <div class="nota frag" style="margin-top:10px"><b style="color:var(--W)">Mínimo:</b> tu suelo del Paso 3 (cubre costes con margen), contrastado con la referencia de la competencia. <b style="color:var(--W)">Máximo:</b> el precio intermedio ×2, ajustable según el riesgo y tu mercado.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.6 — MÉTODO · PASO 2: EL PRECIO MÁXIMO ===== -->
+  <section class="slide" data-blk="El método · el máximo">
+    <div class="frame-t"></div>
+    <div class="kicker">El método · paso 2 de 4 · Precio de salida</div>
+    <div class="stairwrap frag" data-stair="salida"></div>
+    <div class="regla frag" style="margin-top:18px">Define tu precio de <span class="em">salida</span>: el punto medio.</div>
+    <div class="nota frag" style="margin-top:10px">El punto medio entre el mínimo y el máximo. Es el precio con el que sacas el producto al mercado.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.7 — MÉTODO · PASO 3: EL PRECIO DE SALIDA ===== -->
+  <section class="slide" data-blk="El método · la salida">
+    <div class="frame-t"></div>
+    <div class="kicker">El método · paso 3 de 4 · Vender y medir</div>
+    <div class="stairwrap frag" data-stair="vender"></div>
+    <div class="regla frag" style="margin-top:18px"><span class="em">Vende</span> y mide resultados.</div>
+    <div class="nota frag" style="margin-top:10px">Pones el producto a la venta y mides el efecto durante un trimestre. Sin tocar el precio todavía: primero, datos.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.8 — MÉTODO · PASO 4: MEDIR Y AJUSTAR ===== -->
+  <section class="slide" data-blk="El método · medir">
+    <div class="frame-t"></div>
+    <div class="kicker">El método · paso 4 de 4 · Ajustar</div>
+    <div class="stairwrap frag" data-stair="medir"></div>
+    <div class="regla frag" style="margin-top:18px"><span class="em">Ajusta</span> el precio: sube o baja escalones.</div>
+    <div class="nota frag" style="margin-top:10px">Si las ventas se mantienen o crecen con buen margen, <b style="color:var(--verde)">subes</b> un escalón. Si quieres más ventas a costa de beneficio, <b style="color:var(--azul)">bajas</b> uno. Mínimo seis escalones, definidos de antemano.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.9 — CASO TORREZNOS · LA ESCALERA (puente a la calculadora) ===== -->
+  <!-- Importes IDÉNTICOS al caso 'torreznos' de calculadora_escalera.html:
+       pMin 10€ · +1,50€/escalón · 6 escalones (10→19€) · salida (punto medio) 14,50€. -->
+  <section class="slide" data-blk="Caso torreznos · la escalera">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · torreznos de restaurante · la escalera</div>
+    <div class="escD frag">
+      <div class="row"><div class="bar" style="width:95.0%"><span class="price">19,00 €</span></div><span class="tag dim">máximo</span></div>
+      <div class="row"><div class="bar" style="width:85.8%"><span class="price">17,50 €</span></div></div>
+      <div class="row"><div class="bar" style="width:76.7%"><span class="price">16,00 €</span></div></div>
+      <div class="row salida"><div class="bar" style="width:67.5%"><span class="price">14,50 €</span></div><span class="tag">◀ precio de salida · punto medio</span></div>
+      <div class="row"><div class="bar" style="width:58.3%"><span class="price">13,00 €</span></div></div>
+      <div class="row"><div class="bar" style="width:49.2%"><span class="price">11,50 €</span></div></div>
+      <div class="row"><div class="bar" style="width:40.0%"><span class="price">10,00 €</span></div><span class="tag dim">mínimo · cubre costes</span></div>
+    </div>
+    <div class="meta frag">
+      <span>Salto: <b>+1,50 € por escalón</b></span>
+      <span><b>6 escalones</b> · de 10 € a 19 €</span>
+      <span>En cada uno: <b>mides un trimestre</b> <span class="up">↑</span></span>
+    </div>
+    <div class="regla frag" style="margin-top:18px;font-size:clamp(17px,2.2vw,28px)">Subes peldaño a peldaño, <span class="em">midiendo en cada uno</span>. Nada improvisado.</div>
+    <div class="nota frag" style="margin-top:8px">Primero entiendes la escalera. Ahora, en la calculadora, le pones tus números y encuentras el <span class="em">precio óptimo</span>.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.10 — CALCULADORA EN VIVO ===== -->
+  <section class="slide calc" data-blk="Calculadora de escalera">
+    <div class="frame-t"></div>
+    <iframe src="calculadora_escalera.html#torreznos" title="Calculadora de escalera de precios"></iframe>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 4.11 — CIERRE + PUENTE AL PASO 5 ===== -->
+  <section class="slide" data-blk="Cierre">
+    <div class="frame-t"></div>
+    <div class="kicker">La idea que te llevas</div>
+    <h1 class="frag">La escalera no se sostiene sola: necesita un <span class="em">proceso de venta</span>.</h1>
+    <div class="body frag" style="margin-top:24px;max-width:38ch">Mover el precio —arriba o abajo— con criterio, y comunicarlo para que el mercado lo entienda y lo acepte. Eso es el Paso 5.</div>
+    <div class="frame-b"></div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="pb" onclick="prev()">◀ Anterior</button>
+  <span class="count" id="count">1 / 11</span>
+  <button id="nb" onclick="next()">Siguiente ▶</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let si=0;
+
+// === Escalera SVG (6 peldaños) — se ilumina según el paso del método ===
+function drawStair(el){
+  const mode=el.dataset.stair;
+  const W=620,H=300,base=258,n=6,sw=78,gap=14,sx=28;
+  const stepX=i=>sx+i*(sw+gap);
+  const topY=i=>base-(i+1)*34;
+  // marcadores activos por modo
+  let marks=[];
+  if(mode==='horquilla') marks=[{i:0,t:'MÍN'},{i:n-1,t:'MÁX'}];
+  else if(mode==='maximo') marks=[{i:n-1,t:'× 2'}];
+  else if(mode==='salida') marks=[{i:3,t:'SALIDA'}];
+  else if(mode==='vender') marks=[{i:3,t:'MIDES'}];
+  else if(mode==='medir') marks=[{i:2,t:'ÓPTIMO'}];
+  const isMark=i=>marks.find(m=>m.i===i);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  s+='<line x1="16" y1="'+base+'" x2="'+(W-16)+'" y2="'+base+'" stroke="var(--C4)" stroke-width="3"/>';
+  for(let i=0;i<n;i++){
+    const act=isMark(i);
+    const fill=act?'rgba(232,194,35,.18)':'var(--C2)';
+    const stroke=act?'var(--Y)':'var(--C3)';
+    s+='<rect x="'+stepX(i)+'" y="'+topY(i)+'" width="'+sw+'" height="'+(base-topY(i))+'" rx="5" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/>';
+  }
+  // flechas subir/bajar en modo medir
+  if(mode==='medir'){
+    const cx=stepX(2)+sw/2;
+    s+='<text x="'+(stepX(4)+sw/2)+'" y="'+(topY(4)-12)+'" fill="var(--verde)" font-family="Manrope" font-weight="700" font-size="22" text-anchor="middle">↑</text>';
+    s+='<text x="'+(stepX(1)+sw/2)+'" y="'+(topY(1)-12)+'" fill="var(--azul)" font-family="Manrope" font-weight="700" font-size="22" text-anchor="middle">↓</text>';
+  }
+  // etiquetas de marcadores
+  marks.forEach(m=>{
+    s+='<text x="'+(stepX(m.i)+sw/2)+'" y="'+(topY(m.i)-12)+'" fill="var(--Y)" font-family="Manrope" font-weight="700" font-size="15" text-anchor="middle">'+m.t+'</text>';
+  });
+  s+='</svg>';
+  el.innerHTML=s;
+}
+
+// Al ENTRAR en una slide, su contenido aparece con stagger (como el Paso 6).
+function show(i){
+  slides.forEach((s,idx)=>{
+    const act=idx===i;
+    s.classList.toggle('active',act);
+    const fr=[...s.querySelectorAll('.frag')];
+    if(act){
+      fr.forEach((f,k)=>{ f.style.transitionDelay=(k*0.09)+'s'; f.classList.add('on'); });
+      const stair=s.querySelector('.stairwrap'); if(stair) drawStair(stair);
+    } else {
+      fr.forEach(f=>{ f.classList.remove('on'); f.style.transitionDelay='0s'; });
+    }
+  });
+  si=i;
+  document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('pb').disabled=(i===0);
+  document.getElementById('nb').disabled=(i===slides.length-1);
+}
+function next(){ if(si<slides.length-1) show(si+1); }
+function prev(){ if(si>0) show(si-1); }
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
+show(0);
+
+/* ═══ HANDSHAKE con el contenedor (taller_sistema_precios.html) ═══
+   Solo embebido. Envuelve next/prev: en el borde avisa al contenedor para
+   cambiar de paso. Reenvía teclas si tiene el foco (puntero continuo).   */
+(function(){
+  if(window.parent===window) return;
+  var _next=next, _prev=prev;
+  next=function(){ if(si>=slides.length-1){ window.parent.postMessage({na:'boundary',dir:1},'*'); } else { _next(); } };
+  prev=function(){ if(si<=0){ window.parent.postMessage({na:'boundary',dir:-1},'*'); } else { _prev(); } };
+  window.addEventListener('message',function(e){
+    var d=e.data||{};
+    if(d.na==='enter-start') show(0);
+    else if(d.na==='enter-end') show(slides.length-1);
+    else if(d.na==='next') next();
+    else if(d.na==='prev') prev();
+  });
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:1},'*'); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:-1},'*'); }
+  },true);
+  window.parent.postMessage({na:'ready'},'*');
+})();
+</script>
+</body>
+</html>

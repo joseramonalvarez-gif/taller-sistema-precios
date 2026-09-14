@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de escalera de precios · Paso 4</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+  :root{
+    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
+    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --rojo:#e0533d; --naranja:#f0a93f; --verde:#7ec77b; --azul:#79b0e6; --linea:#2a2a26;
+    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
+  .wrap{max-width:1400px;margin:0 auto}
+
+  header.top{margin-bottom:18px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3vw,32px);line-height:1.05;letter-spacing:-.01em}
+  h1 .em{color:var(--mostaza)}
+  .lead{margin-top:8px;font-size:16.5px;line-height:1.5;color:var(--gris)}
+
+  .casos{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:18px 0 22px}
+  .casos .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+  .chip{font-size:13px;font-weight:600;background:transparent;color:var(--blanco);border:1px solid var(--mostaza-dim);padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .15s}
+  .chip:hover{background:var(--mostaza);color:var(--negro);border-color:var(--mostaza)}
+  .chip.ghost{border-color:var(--linea);color:var(--gris)}
+
+  .panel{background:var(--carbon);border:1px solid var(--linea);border-radius:16px;padding:clamp(18px,2.6vw,30px)}
+  /* 16:9 — gráfico a la izquierda, tabla de escalones a la derecha */
+  @media(min-width:1040px){
+    .viz{display:grid;grid-template-columns:1.02fr .98fr;gap:32px;align-items:start}
+  }
+
+  /* Inputs en rejilla */
+  .inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px}
+  @media(min-width:820px){.inputs{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:620px){.inputs{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:5px;padding:6px 0}
+  .field label{font-size:15.5px;color:var(--blanco);font-weight:600}
+  .field label .hint{display:block;font-size:13px;color:var(--gris);font-weight:400;margin-top:2px;line-height:1.3}
+  .field .in{display:flex;align-items:center;gap:6px}
+  .field input{width:100%;background:var(--negro-2);border:1px solid var(--linea);border-radius:9px;color:var(--blanco);font-family:var(--mono);font-size:19px;text-align:right;padding:11px 12px;-moz-appearance:textfield}
+  .field input:focus{outline:none;border-color:var(--mostaza)}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .field .u{font-family:var(--mono);font-size:14px;color:var(--gris);min-width:30px;text-align:left}
+
+  .derived{margin:16px 0 4px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .derived .d{font-family:var(--mono);font-size:14.5px;color:var(--gris);background:var(--negro-2);border:1px solid var(--linea);border-radius:8px;padding:8px 13px}
+  .derived .d b{color:var(--mostaza);font-weight:700}
+
+  .rule{height:0;border-top:1.5px solid var(--linea);margin:18px 0}
+  .rule.strong{border-top-color:var(--mostaza-dim)}
+
+  /* Gráfico */
+  .chartwrap{margin:6px 0 2px}
+  .chartwrap svg{width:100%;height:auto;display:block}
+  .legend{display:flex;gap:20px;justify-content:center;margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--gris)}
+  .legend .k{display:inline-flex;align-items:center;gap:6px}
+  .legend .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+  /* Tabla */
+  table{width:100%;border-collapse:collapse;margin-top:4px;font-size:15.5px}
+  thead th{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);font-weight:600;text-align:right;padding:9px 8px;border-bottom:1px solid var(--linea)}
+  thead th:first-child{text-align:left}
+  tbody td{padding:9px 8px;text-align:right;font-family:var(--mono);border-bottom:1px solid var(--negro-2)}
+  tbody td:first-child{text-align:left;font-family:var(--sans);color:var(--blanco);font-weight:500}
+  tbody td.num{font-weight:600}
+  tbody tr.optimo{background:rgba(232,194,35,.10)}
+  tbody tr.optimo td{color:var(--mostaza)}
+  tbody tr.optimo td:first-child{color:var(--mostaza);font-weight:700}
+  tbody tr.perdida td{color:var(--rojo)}
+  td .vin{width:92px;background:var(--negro-2);border:1px solid var(--linea);border-radius:7px;color:var(--blanco);font-family:var(--mono);font-size:15.5px;text-align:right;padding:7px 8px;-moz-appearance:textfield}
+  td .vin:focus{outline:none;border-color:var(--mostaza)}
+  td .vin::-webkit-outer-spin-button,td .vin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .tag-opt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;background:var(--mostaza);color:var(--negro);border-radius:5px;padding:2px 7px;margin-left:7px;font-weight:700;vertical-align:middle}
+  .tag-sal{font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--mostaza);color:var(--mostaza);border-radius:5px;padding:2px 7px;margin-left:7px;vertical-align:middle}
+
+  .msg{margin-top:16px;padding:18px 22px;border-radius:14px;background:linear-gradient(145deg,var(--carbon-2),var(--negro-2));border:1px solid var(--mostaza-dim);font-size:16.5px;line-height:1.55}
+  .msg .num{font-family:var(--mono);font-weight:700;color:var(--mostaza)}
+  .msg.empty{background:var(--negro-2);border:1px dashed var(--linea);color:var(--gris);font-size:14.5px}
+  .msg.warn{border-color:var(--naranja)}
+  .msg.warn .num{color:var(--naranja)}
+
+  footer.brand{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Paso 4 · La escalera de precios</div>
+    <h1>Sube de precio <span class="em">con criterio</span></h1>
+    <div class="lead">Cada peldaño sube el precio y baja el volumen. El óptimo es donde más beneficio te queda — no el más caro.</div>
+  </header>
+
+  <div class="casos">
+    <span class="lbl">Ejemplo</span>
+    <button class="chip" onclick="cargarCaso('torreznos')">Torreznos</button>
+    <button class="chip ghost" onclick="limpiar()">Vaciar</button>
+  </div>
+
+  <section class="panel">
+    <div class="inputs">
+      <div class="field">
+        <label>Precio mínimo / de partida <span class="hint">el suelo que cubre costes (viene del Paso 3) o tu precio actual</span></label>
+        <div class="in"><input type="number" id="pMin" min="0" step="any" placeholder="0"><span class="u">€</span></div>
+      </div>
+      <div class="field">
+        <label>Incremento por escalón <span class="hint">cuánto sube el precio en cada peldaño</span></label>
+        <div class="in"><input type="number" id="paso" min="0" step="any" placeholder="0"><span class="u">€</span></div>
+      </div>
+      <div class="field">
+        <label>Nº de escalones <span class="hint">el método recomienda al menos 6</span></label>
+        <div class="in"><input type="number" id="nEsc" min="1" step="1" placeholder="6"><span class="u">esc.</span></div>
+      </div>
+      <div class="field">
+        <label>Coste variable por unidad <span class="hint">lo que te cuesta cada unidad (del Paso 3)</span></label>
+        <div class="in"><input type="number" id="cv" min="0" step="any" placeholder="0"><span class="u">€</span></div>
+      </div>
+      <div class="field">
+        <label>Volumen al precio mínimo <span class="hint">cuántas vendes al mes al precio de partida</span></label>
+        <div class="in"><input type="number" id="volBase" min="0" step="any" placeholder="0"><span class="u">uds</span></div>
+      </div>
+      <div class="field">
+        <label>Caída de volumen por escalón <span class="hint">cuánto baja la venta cada vez que subes un peldaño · si no lo sabes, empieza por 10%</span></label>
+        <div class="in"><input type="number" id="caidaPct" min="0" max="100" step="any" placeholder="10"><span class="u">%</span></div>
+      </div>
+    </div>
+
+    <div class="derived" id="derived"></div>
+
+    <div class="rule strong"></div>
+
+    <div class="viz">
+     <div class="viz-l">
+      <div class="chartwrap" id="chartwrap"></div>
+      <div class="legend" id="legend" style="display:none">
+        <span class="k"><span class="sw" style="background:var(--azul)"></span> Volumen</span>
+        <span class="k"><span class="sw" style="background:var(--mostaza)"></span> Beneficio (contribución)</span>
+      </div>
+     </div>
+
+     <div id="tablewrap"></div>
+    </div>
+
+    <div class="msg empty" id="msg">Carga el ejemplo de torreznos o mete tus números para construir la escalera.</div>
+  </section>
+
+  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+</div>
+
+<script>
+const eur0=new Intl.NumberFormat('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0,useGrouping:'always'});
+const eur2=new Intl.NumberFormat('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2,useGrouping:'always'});
+function val(id){const el=document.getElementById(id);if(!el||el.value==='')return null;const n=parseFloat(el.value);return isNaN(n)?null:n;}
+
+let overrides={};   // volúmenes editados a mano por fila {i:vol}
+
+// Lee parámetros estructurales
+function params(){
+  let nEsc=val('nEsc'); nEsc=(nEsc===null)?6:Math.max(1,Math.round(nEsc));
+  return {pMin:val('pMin'), paso:val('paso'), nEsc, cv:val('cv'),
+          volBase:val('volBase'), caidaPct:(val('caidaPct')===null?10:val('caidaPct'))};
+}
+function baseVol(p,i){ return (p.volBase===null)?null:Math.round(p.volBase*Math.pow(1-p.caidaPct/100,i)); }
+
+// Construye el modelo de escalones
+function model(p){
+  const rows=[];
+  for(let i=0;i<=p.nEsc;i++){
+    const precio=p.pMin+i*p.paso;
+    const vol=(i in overrides)?overrides[i]:baseVol(p,i);
+    const mcUnit=(p.cv===null)?null:precio-p.cv;
+    const contrib=(mcUnit===null||vol===null)?null:mcUnit*vol;
+    rows.push({i,precio,vol,mcUnit,contrib});
+  }
+  const pMax=p.pMin+p.paso*p.nEsc;
+  const iSalida=Math.round(p.nEsc/2);
+  let iOptimo=-1,best=-Infinity;
+  rows.forEach(r=>{ if(r.mcUnit!==null&&r.mcUnit>0&&r.contrib!==null&&r.contrib>best){best=r.contrib;iOptimo=r.i;} });
+  return {rows,pMax,iSalida,iOptimo};
+}
+
+// === RENDER COMPLETO (estructura cambia: reconstruye tabla) ===
+function rebuild(){
+  const p=params();
+  const derived=document.getElementById('derived');
+  const msg=document.getElementById('msg');
+  const tablewrap=document.getElementById('tablewrap');
+  const chartwrap=document.getElementById('chartwrap');
+  const legend=document.getElementById('legend');
+
+  if(p.pMin===null||p.paso===null||p.paso<=0){
+    derived.innerHTML=''; tablewrap.innerHTML=''; chartwrap.innerHTML=''; legend.style.display='none';
+    msg.className='msg empty';
+    msg.textContent='Mete al menos el precio de partida y el incremento por escalón.';
+    return;
+  }
+  const m=model(p);
+  derived.innerHTML='<span class="d">Horquilla: <b>'+eur2.format(p.pMin)+' €</b> → <b>'+eur2.format(m.pMax)+' €</b></span>'
+    +'<span class="d">Precio de salida (punto medio): <b>'+eur2.format(p.pMin+p.paso*m.iSalida)+' €</b></span>';
+
+  // Tabla
+  let h='<table><thead><tr><th>Escalón</th><th>Precio</th><th>Volumen</th><th>Margen unit.</th><th>Beneficio (contrib.)</th></tr></thead><tbody>';
+  m.rows.forEach(r=>{
+    h+='<tr data-i="'+r.i+'"><td>Escalón '+r.i+'</td>'
+      +'<td class="num">'+eur2.format(r.precio)+' €</td>'
+      +'<td><input class="vin" type="number" min="0" step="any" id="vol-'+r.i+'" value="'+(r.vol===null?'':r.vol)+'" placeholder="—"></td>'
+      +'<td>'+(r.mcUnit===null?'—':eur2.format(r.mcUnit)+' €')+'</td>'
+      +'<td class="num">'+(r.contrib===null?'—':eur0.format(r.contrib)+' €')+'</td>'
+      +'</tr>';
+  });
+  h+='</tbody></table>';
+  tablewrap.innerHTML=h;
+  // listeners de volumen (edición fila a fila → recompute ligero, sin perder foco)
+  m.rows.forEach(r=>{
+    const el=document.getElementById('vol-'+r.i);
+    el.addEventListener('input',()=>{ const v=el.value===''?null:parseFloat(el.value);
+      if(v===null){delete overrides[r.i];}else{overrides[r.i]=v;} recompute(); });
+  });
+  recompute();
+}
+
+// === RECOMPUTE LIGERO (vol cambia: actualiza contrib, óptimo, gráfico, mensaje) ===
+function recompute(){
+  const p=params();
+  if(p.pMin===null||p.paso===null||p.paso<=0)return;
+  // lee volúmenes actuales del DOM
+  const rows=[];
+  for(let i=0;i<=p.nEsc;i++){
+    const el=document.getElementById('vol-'+i); if(!el)continue;
+    const precio=p.pMin+i*p.paso;
+    const vol=el.value===''?null:parseFloat(el.value);
+    const mcUnit=(p.cv===null)?null:precio-p.cv;
+    const contrib=(mcUnit===null||vol===null||isNaN(vol))?null:mcUnit*vol;
+    rows.push({i,precio,vol:(isNaN(vol)?null:vol),mcUnit,contrib});
+  }
+  const iSalida=Math.round(p.nEsc/2);
+  let iOptimo=-1,best=-Infinity;
+  rows.forEach(r=>{ if(r.mcUnit!==null&&r.mcUnit>0&&r.contrib!==null&&r.contrib>best){best=r.contrib;iOptimo=r.i;} });
+
+  // actualizar celdas margen/contrib + clases de fila
+  rows.forEach(r=>{
+    const tr=document.querySelector('tr[data-i="'+r.i+'"]'); if(!tr)return;
+    const tds=tr.querySelectorAll('td');
+    tds[3].textContent=(r.mcUnit===null?'—':eur2.format(r.mcUnit)+' €');
+    tds[4].innerHTML=(r.contrib===null?'—':eur0.format(r.contrib)+' €')
+      +(r.i===iOptimo?'<span class="tag-opt">ÓPTIMO</span>':(r.i===iSalida?'<span class="tag-sal">salida</span>':''));
+    tr.className=(r.i===iOptimo?'optimo':((r.mcUnit!==null&&r.mcUnit<=0)?'perdida':''));
+  });
+
+  drawChart(rows,iOptimo,iSalida);
+  setMsg(rows,iOptimo,p);
+}
+
+function drawChart(rows,iOptimo,iSalida){
+  const wrap=document.getElementById('chartwrap'), legend=document.getElementById('legend');
+  const valid=rows.filter(r=>r.vol!==null&&r.contrib!==null);
+  if(valid.length<2){ wrap.innerHTML=''; legend.style.display='none'; return; }
+  legend.style.display='flex';
+  const W=640,H=250,padL=18,padR=18,padT=18,padB=42;
+  const n=rows.length;
+  const x=i=> padL + (W-padL-padR)*(i/(n-1));
+  const volMax=Math.max(...rows.map(r=>r.vol||0))||1;
+  const conMax=Math.max(...rows.map(r=>r.contrib||0))||1;
+  const yV=v=> padT + (H-padT-padB)*(1-v/volMax);
+  const yC=c=> padT + (H-padT-padB)*(1-c/conMax);
+  const ptsV=rows.map(r=>x(r.i)+','+yV(r.vol||0)).join(' ');
+  const ptsC=rows.map(r=>x(r.i)+','+yC(r.contrib||0)).join(' ');
+  let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  // base
+  s+='<line x1="'+padL+'" y1="'+(H-padB)+'" x2="'+(W-padR)+'" y2="'+(H-padB)+'" stroke="#2a2a26" stroke-width="1"/>';
+  // salida (discreta)
+  if(iSalida>=0&&iSalida<n){ s+='<line x1="'+x(iSalida)+'" y1="'+padT+'" x2="'+x(iSalida)+'" y2="'+(H-padB)+'" stroke="#9a812a" stroke-width="1" stroke-dasharray="3 4"/>'; }
+  // óptimo (mostaza)
+  if(iOptimo>=0){ s+='<line x1="'+x(iOptimo)+'" y1="'+padT+'" x2="'+x(iOptimo)+'" y2="'+(H-padB)+'" stroke="#E8C223" stroke-width="1.5"/>'; }
+  // curvas
+  s+='<polyline fill="none" stroke="#5b9bd5" stroke-width="2.5" points="'+ptsV+'"/>';
+  s+='<polyline fill="none" stroke="#E8C223" stroke-width="3" points="'+ptsC+'"/>';
+  // puntos beneficio + dot óptimo
+  rows.forEach(r=>{ s+='<circle cx="'+x(r.i)+'" cy="'+yC(r.contrib||0)+'" r="'+(r.i===iOptimo?5:2.5)+'" fill="'+(r.i===iOptimo?'#E8C223':'#9a812a')+'"/>'; });
+  // etiquetas precio en X
+  rows.forEach(r=>{ s+='<text x="'+x(r.i)+'" y="'+(H-padB+17)+'" fill="#d8d4c8" font-family="JetBrains Mono,monospace" font-size="12" font-weight="500" text-anchor="middle">'+eur0.format(r.precio)+'€</text>'; });
+  // etiqueta óptimo
+  if(iOptimo>=0){ s+='<text x="'+x(iOptimo)+'" y="'+(padT-2)+'" fill="#E8C223" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" text-anchor="middle">ÓPTIMO</text>'; }
+  s+='</svg>';
+  wrap.innerHTML=s;
+}
+
+function setMsg(rows,iOptimo,p){
+  const msg=document.getElementById('msg');
+  const valid=rows.filter(r=>r.vol!==null&&r.contrib!==null);
+  if(p.cv===null){ msg.className='msg empty'; msg.textContent='Mete el coste variable por unidad para ver dónde está tu óptimo.'; return; }
+  if(valid.length===0){ msg.className='msg empty'; msg.textContent='Mete tu volumen estimado para ver la escalera moverse.'; return; }
+  if(p.caidaPct===0){ msg.className='msg warn';
+    msg.innerHTML='Con <span class="num">0%</span> de caída, lo óptimo es subir siempre. ¿Seguro que vender más caro no afecta nada a tus ventas? Pon una caída realista y vuelve a mirar.'; return; }
+  if(iOptimo<0){ msg.className='msg empty'; msg.textContent='Ningún escalón deja margen positivo: revisa precio y coste.'; return; }
+  const opt=rows.find(r=>r.i===iOptimo);
+  if(iOptimo===rows.length-1){
+    msg.className='msg warn';
+    msg.innerHTML='El óptimo cae en el <b>techo</b> de tu horquilla (<span class="num">'+eur2.format(opt.precio)+' €</span>): aún tienes recorrido para subir. Amplía la escalera y vuelve a medir.';
+  } else {
+    msg.className='msg';
+    msg.innerHTML='Tu precio óptimo es <span class="num">'+eur2.format(opt.precio)+' €</span> (te deja ≈ <span class="num">'+eur0.format(opt.contrib)+' €/mes</span>), no el más alto (<span class="num">'+eur2.format(rows[rows.length-1].precio)+' €</span>). A partir de ahí, cada subida pierde más en volumen de lo que gana en margen.';
+  }
+}
+
+// === CASOS ===
+const casos={
+  // Torreznos (cifras del original): partida 10€, +1,50€, 6 escalones, cv 3€, 200 uds/mes, caída 14% → óptimo 13€
+  torreznos:{pMin:10,paso:1.5,nEsc:6,cv:3,volBase:200,caidaPct:14}
+};
+function cargarCaso(n){
+  const c=casos[n]; overrides={};
+  for(const k of ['pMin','paso','nEsc','cv','volBase','caidaPct']){
+    const el=document.getElementById(k); if(el)el.value=(k in c)?c[k]:'';
+  }
+  rebuild();
+}
+function limpiar(){ overrides={}; document.querySelectorAll('.inputs input').forEach(e=>e.value=''); rebuild(); }
+
+// Estructurales → reconstruyen tabla. volBase/caidaPct además resetean overrides.
+['pMin','paso','nEsc','cv'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',rebuild);});
+['volBase','caidaPct'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',()=>{overrides={};rebuild();});});
+
+// Precarga vía URL (p. ej. desde el iframe del paso4.html): calculadora_escalera.html#torreznos
+if(location.hash && casos[location.hash.slice(1)]) cargarCaso(location.hash.slice(1));
+else rebuild();
+</script>
+</body>
+</html>

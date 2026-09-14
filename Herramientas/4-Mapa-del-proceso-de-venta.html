@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de quesitos · Paso 5</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+  :root{
+    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
+    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --azul:#79b0e6; --cobre:#d99c6e; --verde:#7ec77b; --rojo:#e0533d; --linea:#2a2a26;
+    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
+  .wrap{max-width:1400px;margin:0 auto}
+
+  header.top{margin-bottom:14px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3vw,32px);line-height:1.05;letter-spacing:-.01em}
+  h1 .em{color:var(--mostaza)}
+  .lead{margin-top:8px;font-size:16.5px;line-height:1.5;color:var(--gris);max-width:72ch;margin-left:auto;margin-right:auto}
+
+  .casos{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0 14px}
+  .casos .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+  .chip{font-size:13px;font-weight:600;background:transparent;color:var(--blanco);border:1px solid var(--mostaza-dim);padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .15s}
+  .chip:hover{background:var(--mostaza);color:var(--negro);border-color:var(--mostaza)}
+  .chip.ghost{border-color:var(--linea);color:var(--gris)}
+
+  /* Guía desplegable */
+  .guia{max-width:1400px;margin:0 auto 16px}
+  .guia-btn{width:100%;background:var(--carbon);border:1px solid var(--mostaza-dim);border-radius:12px;color:var(--mostaza);
+    font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.04em;padding:13px 18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+  .guia-btn:hover{background:var(--carbon-2)}
+  .guia-btn .arr{transition:transform .2s}
+  .guia.open .guia-btn .arr{transform:rotate(180deg)}
+  .guia-body{display:none;background:var(--negro-2);border:1px solid var(--linea);border-top:0;border-radius:0 0 12px 12px;padding:6px 18px 14px;margin-top:-6px}
+  .guia.open .guia-body{display:block}
+  .guia-body .g{padding:11px 0;border-bottom:1px solid var(--carbon)}
+  .guia-body .g:last-child{border-bottom:0}
+  .guia-body .g h4{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--blanco);margin-bottom:4px}
+  .guia-body .g h4 b{color:var(--mostaza)}
+  .guia-body .g p{font-size:14.5px;color:var(--gris);line-height:1.55}
+
+  /* Banner puente a la curva de valor */
+  .puente{max-width:1400px;margin:0 auto 14px;background:linear-gradient(145deg,var(--carbon-2),var(--negro-2));
+    border:1px solid var(--mostaza-dim);border-radius:12px;padding:15px 20px;font-size:15.5px;line-height:1.55;color:var(--gris)}
+  .puente b{color:var(--mostaza);font-weight:700}
+  .puente .w{color:var(--blanco);font-weight:600}
+
+  /* Layout: rosco + ficha */
+  .panel{display:grid;grid-template-columns:minmax(380px,560px) 1fr;gap:30px;align-items:start}
+  @media(max-width:760px){.panel{grid-template-columns:1fr}}
+  .box{background:var(--carbon);border:1px solid var(--linea);border-radius:16px;padding:clamp(16px,2.2vw,24px)}
+
+  /* Rosco */
+  .roscowrap svg{width:100%;height:auto;display:block;cursor:pointer}
+  .seg{transition:fill .15s,stroke .15s}
+  .seg-lbl{font-family:var(--sans);font-weight:700;font-size:14px;fill:#d8d4c8;pointer-events:none}
+  .seg-lbl.sel{fill:var(--blanco)}
+  .seg-num{font-family:var(--mono);font-weight:700;font-size:17px;pointer-events:none}
+  .center-t{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--mostaza);text-anchor:middle}
+  .center-n{font-family:var(--serif);font-weight:700;font-size:32px;fill:var(--mostaza);text-anchor:middle}
+  .leg{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-family:var(--mono);font-size:12.5px;color:var(--gris)}
+  .leg .k{display:inline-flex;align-items:center;gap:5px}
+  .leg .sw{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid var(--linea)}
+
+  /* Ficha editable */
+  .ficha .qnum{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mostaza)}
+  .ficha h2{font-family:var(--serif);font-weight:600;font-size:clamp(21px,2.4vw,28px);margin:2px 0 5px}
+  .ficha .qdesc{font-size:14.5px;color:var(--gris);line-height:1.5;margin-bottom:14px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.02em;color:var(--blanco);margin-bottom:6px}
+  .field label .hint{font-weight:400;color:var(--gris);font-size:13px}
+  textarea{width:100%;background:var(--negro-2);border:1px solid var(--linea);border-radius:9px;color:var(--blanco);
+    font-family:var(--sans);font-size:15px;line-height:1.5;padding:10px 12px;resize:vertical;min-height:58px}
+  textarea:focus{outline:none;border-color:var(--mostaza)}
+  textarea::placeholder{color:#5a5a55}
+  textarea.valor:focus{border-color:var(--mostaza)}
+
+  .refuerzo{display:flex;align-items:center;gap:10px;margin-top:4px;background:var(--negro-2);border:1px solid var(--linea);
+    border-radius:9px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+  .refuerzo.on{border-color:var(--mostaza)}
+  .refuerzo .sw{width:38px;height:21px;border-radius:11px;background:var(--carbon-2);border:1px solid var(--linea);position:relative;flex:0 0 auto;transition:background .15s}
+  .refuerzo.on .sw{background:var(--mostaza)}
+  .refuerzo .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--gris);transition:transform .15s,background .15s}
+  .refuerzo.on .sw::after{transform:translateX(17px);background:var(--negro)}
+  .refuerzo .txt{font-size:14.5px;line-height:1.4}
+  .refuerzo .txt b{color:var(--blanco);font-weight:700}
+  .refuerzo .txt span{color:var(--gris)}
+
+  .nav-q{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+  .nav-q button{flex:1;background:transparent;border:1px solid var(--linea);color:var(--gris);font-family:var(--sans);
+    font-weight:600;font-size:14px;padding:9px;border-radius:8px;cursor:pointer;transition:all .15s}
+  .nav-q button:hover{border-color:var(--mostaza-dim);color:var(--blanco)}
+
+  footer.brand{margin-top:22px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Paso 5 · El proceso de venta</div>
+    <h1>El mapa de <span class="em">quesitos</span></h1>
+    <div class="lead">Tu proceso de venta es todo lo que impacta al cliente desde que te ve hasta que compra. Cada quesito es un punto de contacto. Escribe qué haces hoy en cada uno y dónde lo pondrás en valor.</div>
+  </header>
+
+  <div class="casos">
+    <span class="lbl">Empezar</span>
+    <button class="chip ghost" onclick="cargar('blanco')">Hoja en blanco</button>
+    <button class="chip" onclick="cargar('climatizacion')">Ver ejemplo: climatización</button>
+  </div>
+</div>
+
+<div class="guia" id="guia">
+  <button class="guia-btn" onclick="document.getElementById('guia').classList.toggle('open')">
+    <span>¿Cómo se usa el mapa de quesitos?</span><span class="arr">▾</span>
+  </button>
+  <div class="guia-body">
+    <div class="g"><h4>1 · <b>Qué es un quesito</b></h4><p>Cada punto de contacto del proceso de venta: cómo comunicas, cómo recibes al cliente, qué atención das, cómo entregas el presupuesto, qué extras incluyes y qué plazos manejas. Juntos forman la experiencia que justifica (o tira) tu precio.</p></div>
+    <div class="g"><h4>2 · <b>Qué hago hoy</b></h4><p>Sé honesto: describe lo que de verdad vive el cliente hoy en ese punto, no lo que te gustaría.</p></div>
+    <div class="g"><h4>3 · <b>Cómo lo pongo en valor</b></h4><p>El movimiento concreto que hace que ese punto transmita más valor y haga coherente tu precio. No es "bajar precio": es que el cliente perciba por qué vales lo que vales.</p></div>
+    <div class="g"><h4>4 · <b>Marca dónde te diferencias (refuerzo)</b></h4><p>Según tu <b>curva de valor</b> del Paso 2: enciende el quesito donde tu línea se despega. Ahí inviertes y pones el énfasis. Lo que no es tu ventaja, no lo regales.</p></div>
+    <div class="g"><h4>5 · <b>De aquí nace tu estrategia de venta</b></h4><p>El conjunto de quesitos reforzados es tu proceso de venta diseñado: coherente con tu posicionamiento y tu precio, no improvisado.</p></div>
+  </div>
+</div>
+
+<div class="puente">
+  Según establezcas tu <b>curva de valor y tu posicionamiento</b> (Paso 2), así organizas tu proceso de venta: <span class="w">dónde poner énfasis, qué comunicar, qué dar gratis y qué no.</span> Refuerza los quesitos donde tu línea se despega.
+</div>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="box roscowrap">
+      <div id="rosco"></div>
+      <div class="leg">
+        <span class="k"><span class="sw" style="background:var(--carbon-2)"></span> Sin definir</span>
+        <span class="k"><span class="sw" style="background:#3a3528"></span> Definido</span>
+        <span class="k"><span class="sw" style="background:var(--mostaza)"></span> Aquí me diferencio</span>
+      </div>
+    </div>
+
+    <div class="box ficha" id="ficha"></div>
+  </section>
+
+  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+</div>
+
+<script>
+const QUESITOS=[
+  {n:1, name:'Comunicación',       desc:'Qué dices y cómo te muestras antes de que te contacten.'},
+  {n:2, name:'Primer contacto',    desc:'Cómo recibes al cliente cuando contacta contigo.'},
+  {n:3, name:'Atención y experiencia', desc:'El tipo de espacio, trato y atención que recibe.'},
+  {n:4, name:'El presupuesto',     desc:'Cómo le haces llegar la propuesta y qué transmite.'},
+  {n:5, name:'Extras y añadidos',  desc:'Qué incluyes de más en la propuesta (y cómo lo pones en valor).'},
+  {n:6, name:'Plazos y tiempos',   desc:'Plazos de entrega, instalación y tiempos de decisión.'}
+];
+
+const EJEMPLOS={
+  climatizacion:[
+    {hoy:'Anuncio genérico: "instalamos aire acondicionado, el mejor precio".', valor:'Comunicamos proyecto a medida, ahorro y eficiencia — no el precio del aparato.', refuerzo:true},
+    {hoy:'Respondemos cuando podemos; presupuesto rápido por teléfono.', valor:'Visita técnica concertada y un asesor asignado: el cliente siente que le estudian su caso.', refuerzo:true},
+    {hoy:'No hay espacio ni demostración; todo por WhatsApp.', valor:'Mostramos el equipo funcionando, marcas y eficiencia. La experiencia justifica el precio.', refuerzo:false},
+    {hoy:'PDF con el precio del aparato más la instalación.', valor:'Propuesta con 3 opciones, valor desglosado, garantía y postventa visibles, financiación incluida.', refuerzo:true},
+    {hoy:'Ningún extra; el cliente no percibe nada de más.', valor:'Mantenimiento el primer año y revisión incluida — vendidos y puestos en valor, no regalados.', refuerzo:false},
+    {hoy:'"Te instalamos cuando tengamos hueco".', valor:'Fecha cerrada y tiempos de instalación medidos: transmite control y profesionalidad.', refuerzo:true}
+  ]
+};
+
+let model = blank();
+let sel = 0;
+
+function blank(){ return QUESITOS.map(()=>({hoy:'',valor:'',refuerzo:false})); }
+
+/* ---------- ROSCO ---------- */
+function polar(cx,cy,r,a){ return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+function sectorPath(cx,cy,r1,r2,a0,a1){
+  const large = (a1-a0) > Math.PI ? 1 : 0;
+  const [x1,y1]=polar(cx,cy,r2,a0), [x2,y2]=polar(cx,cy,r2,a1);
+  const [x3,y3]=polar(cx,cy,r1,a1), [x4,y4]=polar(cx,cy,r1,a0);
+  return `M${x1.toFixed(2)},${y1.toFixed(2)} A${r2},${r2} 0 ${large} 1 ${x2.toFixed(2)},${y2.toFixed(2)} `
+       + `L${x3.toFixed(2)},${y3.toFixed(2)} A${r1},${r1} 0 ${large} 0 ${x4.toFixed(2)},${y4.toFixed(2)} Z`;
+}
+function segFill(i){
+  if(model[i].refuerzo) return '#E8C223';
+  if((model[i].hoy||'').trim() || (model[i].valor||'').trim()) return '#3a3528';
+  return '#1f1f1f';
+}
+function renderRosco(){
+  const S=380, cx=S/2, cy=S/2, r1=68, r2=150, gap=0.035;
+  const n=QUESITOS.length, step=2*Math.PI/n, start=-Math.PI/2;
+  let s='<svg viewBox="0 0 '+S+' '+S+'" xmlns="http://www.w3.org/2000/svg">';
+  for(let i=0;i<n;i++){
+    const a0=start+i*step+gap, a1=start+(i+1)*step-gap, am=(a0+a1)/2;
+    const isSel=i===sel;
+    s+='<path class="seg" data-i="'+i+'" d="'+sectorPath(cx,cy,r1,r2,a0,a1)+'" '
+      +'fill="'+segFill(i)+'" stroke="'+(isSel?'#f4f1e9':'#2a2a26')+'" stroke-width="'+(isSel?2.5:1)+'"/>';
+    // número en el centroide del segmento
+    const [nx,ny]=polar(cx,cy,(r1+r2)/2,am);
+    const numColor = model[i].refuerzo ? '#000' : (isSel?'#f4f1e9':'#bdb9ad');
+    s+='<text class="seg-num" x="'+nx.toFixed(1)+'" y="'+(ny+5).toFixed(1)+'" text-anchor="middle" fill="'+numColor+'">'+QUESITOS[i].n+'</text>';
+    // etiqueta fuera del anillo
+    const [lx,ly]=polar(cx,cy,r2+20,am);
+    let anchor='middle';
+    if(Math.cos(am)>0.3) anchor='start'; else if(Math.cos(am)<-0.3) anchor='end';
+    const words=QUESITOS[i].name.split(' ');
+    const line2 = words.length>1 ? words.slice(1).join(' ') : '';
+    const cls='seg-lbl'+(isSel?' sel':'');
+    if(line2){
+      s+='<text class="'+cls+'" x="'+lx.toFixed(1)+'" y="'+(ly-3).toFixed(1)+'" text-anchor="'+anchor+'">'+words[0]+'</text>';
+      s+='<text class="'+cls+'" x="'+lx.toFixed(1)+'" y="'+(ly+11).toFixed(1)+'" text-anchor="'+anchor+'">'+line2+'</text>';
+    } else {
+      s+='<text class="'+cls+'" x="'+lx.toFixed(1)+'" y="'+(ly+4).toFixed(1)+'" text-anchor="'+anchor+'">'+QUESITOS[i].name+'</text>';
+    }
+  }
+  // centro
+  const refCount = model.filter(m=>m.refuerzo).length;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r1-6)+'" fill="#0d0d0d" stroke="#2a2a26" stroke-width="1"/>';
+  s+='<text class="center-t" x="'+cx+'" y="'+(cy-12)+'">REFUERZO</text>';
+  s+='<text class="center-n" x="'+cx+'" y="'+(cy+18)+'">'+refCount+'/6</text>';
+  s+='</svg>';
+  const wrap=document.getElementById('rosco');
+  wrap.innerHTML=s;
+  wrap.querySelectorAll('.seg').forEach(p=>{
+    p.addEventListener('click',()=>{ sel=+p.dataset.i; render(); });
+  });
+}
+
+/* ---------- FICHA ---------- */
+function renderFicha(){
+  const q=QUESITOS[sel], m=model[sel];
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  let h='<div class="qnum">Quesito '+q.n+' de 6</div>'
+    +'<h2>'+q.name+'</h2>'
+    +'<div class="qdesc">'+q.desc+'</div>'
+    +'<div class="field"><label>Qué hago hoy <span class="hint">— lo que vive el cliente ahora</span></label>'
+    +'<textarea id="ta-hoy" placeholder="Describe lo que hace tu negocio hoy en este punto…">'+esc(m.hoy)+'</textarea></div>'
+    +'<div class="field"><label>Cómo lo pongo en valor <span class="hint">— el movimiento que sube la percepción</span></label>'
+    +'<textarea id="ta-valor" class="valor" placeholder="El cambio concreto que hace coherente tu precio…">'+esc(m.valor)+'</textarea></div>'
+    +'<div class="refuerzo'+(m.refuerzo?' on':'')+'" id="refToggle"><span class="sw"></span>'
+    +'<span class="txt"><b>Aquí me diferencio</b> <span>— donde tu curva de valor se despega. Inviertes y pones énfasis.</span></span></div>'
+    +'<div class="nav-q"><button id="prevQ">◀ Quesito anterior</button><button id="nextQ">Siguiente quesito ▶</button></div>';
+  const f=document.getElementById('ficha');
+  f.innerHTML=h;
+  document.getElementById('ta-hoy').addEventListener('input',e=>{ model[sel].hoy=e.target.value; refreshRoscoFill(); });
+  document.getElementById('ta-valor').addEventListener('input',e=>{ model[sel].valor=e.target.value; refreshRoscoFill(); });
+  document.getElementById('refToggle').addEventListener('click',()=>{ model[sel].refuerzo=!model[sel].refuerzo; render(); });
+  document.getElementById('prevQ').addEventListener('click',()=>{ sel=(sel+QUESITOS.length-1)%QUESITOS.length; render(); });
+  document.getElementById('nextQ').addEventListener('click',()=>{ sel=(sel+1)%QUESITOS.length; render(); });
+}
+
+// repinta solo los rellenos del rosco sin perder el foco del textarea
+function refreshRoscoFill(){
+  document.querySelectorAll('#rosco .seg').forEach(p=>{ p.setAttribute('fill', segFill(+p.dataset.i)); });
+  const refCount = model.filter(m=>m.refuerzo).length;
+  const cn=document.querySelector('#rosco .center-n'); if(cn) cn.textContent=refCount+'/6';
+}
+
+function render(){ renderRosco(); renderFicha(); }
+
+/* ---------- CARGA ---------- */
+function cargar(n){
+  if(n==='blanco'){ model=blank(); }
+  else { const e=EJEMPLOS[n]; if(!e)return; model=e.map(o=>({...o})); }
+  sel=0; render();
+}
+
+// Precarga por hash desde el iframe de paso5.html: quesitos.html#climatizacion | #blanco
+const h=location.hash.slice(1);
+cargar(EJEMPLOS[h]?h:'blanco');
+</script>
+</body>
+</html>

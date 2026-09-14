@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso 2 — Tu posicionamiento define tu precio · slides (contenido)</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<!-- Contenido del Paso 2 SIN header/footer/chrome. El chrome lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
+<!-- TEXTO DE PANTALLA (capa profesional). El guion fino hablado lo pone Antonio. Posicionamiento + CUPRA = del original (masterclass maquetada). Curva de valor = ampliación nueva (Antonio introduce, JR operativiza). -->
+<style>
+  :root{
+    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
+    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b; --azul:#5b9bd5; --cobre:#c9885b;
+    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--BG);color:var(--W);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+
+  .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
+  .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
+    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+  .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
+  .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
+  .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
+
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(36px,5vw,72px) clamp(40px,8vw,120px);text-align:center}
+  .slide.active{display:flex}
+  .slide::before{content:"";position:absolute;inset:0;background-image:
+    linear-gradient(var(--C2) 1px,transparent 1px),linear-gradient(90deg,var(--C2) 1px,transparent 1px);
+    background-size:52px 52px;opacity:.18;pointer-events:none}
+  .frame-t{position:absolute;top:0;left:8%;right:8%;height:2px;background:var(--Y);z-index:1}
+  .frame-b{position:absolute;bottom:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--Y),transparent);z-index:1}
+  .slide>*{position:relative;z-index:2}
+
+  .kicker{font-family:var(--sans);font-size:clamp(10px,1.1vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--Y);margin-bottom:clamp(16px,2.4vw,30px)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,64px);line-height:1.06;max-width:20ch}
+  .em{color:var(--Y)}
+  .lead{font-family:var(--serif);font-size:clamp(20px,3vw,38px);line-height:1.22;max-width:24ch;color:var(--W)}
+  .body{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);line-height:1.6;color:var(--GR);max-width:40ch}
+  .regla{font-family:var(--serif);font-weight:600;font-size:clamp(20px,2.8vw,36px);color:var(--Y);max-width:26ch}
+  .nota{font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);color:var(--GR);max-width:44ch;line-height:1.5}
+
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .slide.active>*{animation:fadeIn .3s ease both}
+  .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+  .frag.on{opacity:1;transform:none}
+
+  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.32);padding:18px 22px}
+
+  /* Eje de posicionamiento (3 posiciones) */
+  .eje{display:flex;justify-content:space-between;width:min(80vw,720px);margin-top:18px}
+  .eje span{font-family:var(--serif);font-size:clamp(17px,2.4vw,30px);color:var(--GR)}
+  .eje span.valor{color:var(--Y);font-weight:600}
+  .ejebar{width:min(80vw,720px);height:4px;margin-top:12px;border-radius:3px;background:linear-gradient(90deg,var(--C4),var(--C4) 30%,var(--Y))}
+
+  /* CUPRA — cascada problema→jugada→resultado */
+  .cupra{display:grid;grid-template-columns:1fr;gap:14px;width:min(90vw,720px);margin-top:4px;text-align:left}
+  .cupra .paso{display:flex;gap:14px;align-items:flex-start}
+  .cupra .et{flex:0 0 auto;font-family:var(--sans);font-weight:800;font-size:clamp(11px,1vw,12px);letter-spacing:.14em;text-transform:uppercase;color:var(--Y);width:clamp(74px,9vw,96px);padding-top:4px}
+  .cupra p{font-family:var(--serif);font-size:clamp(16px,1.8vw,22px);color:var(--GR);line-height:1.45}
+  .cupra p b{color:var(--W);font-weight:600}
+  .stats{display:flex;gap:clamp(18px,3vw,46px);justify-content:center;margin-top:24px}
+  .stat .n{font-family:var(--sans);font-weight:800;font-size:clamp(30px,5vw,62px);color:var(--Y);line-height:1}
+  .stat .l{font-family:var(--serif);font-size:clamp(14px,1.5vw,18px);color:var(--GR);margin-top:6px;max-width:16ch;margin-left:auto;margin-right:auto}
+
+  /* Tres opciones de posicionamiento (reflexión) */
+  .tres{display:flex;gap:clamp(12px,2vw,22px);flex-wrap:wrap;justify-content:center;margin-top:6px}
+  .op{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(14px,1.8vw,22px) clamp(18px,2.2vw,28px);width:min(28vw,210px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .op h3{font-family:var(--sans);font-weight:700;font-size:clamp(14px,1.7vw,21px);color:var(--Y);margin-bottom:5px}
+  .op p{font-family:var(--serif);font-size:clamp(14px,1.45vw,17px);color:var(--GR);line-height:1.4}
+
+  /* Sketch curva de valor (ilustración estática) */
+  .sketch{width:min(78vw,560px);margin-top:6px}
+  .sketch svg{width:100%;height:auto;display:block}
+
+  /* Factores competitivos (ejemplos por sector) */
+  .facts{display:flex;flex-direction:column;gap:clamp(10px,1.6vw,16px);width:min(92vw,820px);margin-top:8px}
+  .factrow{display:grid;grid-template-columns:clamp(110px,16vw,170px) 1fr;gap:14px;align-items:center}
+  @media(max-width:640px){.factrow{grid-template-columns:1fr;gap:6px;text-align:center}}
+  .factrow .sec{font-family:var(--sans);font-weight:700;font-size:clamp(14px,1.4vw,18px);color:var(--Y);text-align:right}
+  @media(max-width:640px){.factrow .sec{text-align:center}}
+  .factrow .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chipv{font-family:var(--sans);font-size:clamp(13px,1.35vw,16px);color:var(--GR);background:var(--C2);border:1px solid var(--C3);border-radius:7px;padding:5px 11px}
+  .chipv.pre{color:var(--Y);border-color:var(--mostaza-dim)}
+
+  /* Las 4 acciones (RICE) */
+  .rice2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px);width:min(92vw,780px);margin-top:6px}
+  @media(max-width:640px){.rice2{grid-template-columns:1fr}}
+  .qd{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:18px 20px;text-align:left;box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .qd .h{font-family:var(--sans);font-weight:800;font-size:clamp(13px,1.7vw,20px);letter-spacing:.02em;margin-bottom:8px}
+  .qd.menos{border-color:var(--azul)} .qd.menos .h{color:var(--azul)}
+  .qd.mas{border-color:var(--Y);box-shadow:0 4px 20px rgba(232,194,35,.12)} .qd.mas .h{color:var(--Y)}
+  .qd p{font-family:var(--serif);font-size:clamp(15px,1.6vw,20px);color:var(--GR);line-height:1.45}
+  .qd p b{color:var(--W);font-weight:600}
+
+  /* Innovación en valor — dos flechas */
+  .inv{display:flex;gap:clamp(20px,4vw,60px);justify-content:center;margin-top:10px}
+  .inv .col{text-align:center}
+  .inv .arr{font-family:var(--sans);font-weight:800;font-size:clamp(26px,4vw,48px);line-height:1}
+  .inv .col.v .arr{color:var(--Y)} .inv .col.c .arr{color:var(--azul)}
+  .inv .col .t{font-family:var(--sans);font-weight:700;font-size:clamp(12px,1.5vw,18px);color:var(--W);margin-top:6px}
+  .inv .col .s{font-family:var(--serif);font-size:clamp(13px,1.35vw,16px);color:var(--GR);margin-top:2px}
+
+  /* Mostaza-dim para bordes sutiles */
+  :root{--mostaza-dim:#9a812a}
+
+  /* Rejilla ERRC (caso trabajado) */
+  .errc-h{display:flex;justify-content:space-between;width:min(92vw,740px);margin:0 auto 6px;font-family:var(--sans);font-weight:700;font-size:clamp(10px,1.15vw,14px)}
+  .errc-h .c{color:var(--azul)} .errc-h .v{color:var(--Y)}
+  .errc{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px,1.3vw,15px);width:min(92vw,740px);margin-top:2px;text-align:left}
+  .eq{border-radius:12px;padding:clamp(10px,1.3vw,15px) clamp(13px,1.6vw,18px);background:var(--C2);border:1px solid var(--C3);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .eq .h{font-family:var(--sans);font-weight:800;font-size:clamp(11px,1.35vw,16px);letter-spacing:.03em;margin-bottom:4px}
+  .eq p{font-family:var(--serif);font-size:clamp(14px,1.4vw,18px);color:var(--GR);line-height:1.32}
+  .eq p b{color:var(--W);font-weight:600}
+  .eq.elim,.eq.red{border-color:var(--azul)} .eq.elim .h,.eq.red .h{color:var(--azul)}
+  .eq.elev,.eq.crea{border-color:var(--Y)} .eq.elev .h,.eq.crea .h{color:var(--Y)}
+
+  /* Mini curva antes/después */
+  .mini{width:min(72vw,440px);margin-top:10px}
+  .mini svg{width:100%;height:auto;display:block}
+
+  /* Patrón — lista numerada */
+  .patron{display:flex;flex-direction:column;gap:clamp(9px,1.4vw,15px);width:min(92vw,720px);margin-top:8px;text-align:left}
+  .prow{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+  .prow .nn{font-family:var(--sans);font-weight:800;font-size:clamp(15px,2vw,26px);color:var(--Y);line-height:1.1;min-width:1.2em}
+  .prow p{font-family:var(--serif);font-size:clamp(15px,1.6vw,21px);color:var(--GR);line-height:1.4}
+  .prow p b{color:var(--W);font-weight:600}
+
+  /* Herramienta integrada */
+  .slide.tool{padding:6px 10px}
+  .slide.tool iframe{width:min(1700px,98.5vw);height:100%;border:0;border-radius:10px;background:var(--BG)}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- ===== 2.1 — PORTADA ===== -->
+  <section class="slide" data-blk="Portada">
+    <div class="frame-t"></div>
+    <div class="kicker">Paso 2 · El posicionamiento</div>
+    <div class="lead frag">Cómo te ven decide cuánto te pagan.</div>
+    <h1 class="frag" style="margin-top:20px">Tu posicionamiento <span class="em">define tu precio.</span></h1>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.2 — QUÉ ES POSICIONAMIENTO ===== -->
+  <section class="slide" data-blk="Qué es posicionamiento">
+    <div class="frame-t"></div>
+    <div class="kicker">El concepto</div>
+    <div class="lead frag">Posicionamiento es cómo quieres que te <span class="em">recuerden</span> y te <span class="em">vean</span> frente al resto.</div>
+    <div class="body frag" style="margin-top:28px">Y esa decisión va de la mano del precio: según cómo te quieras posicionar, así tienes que elegir lo que cobras.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.3 — PRECIO Y VALOR VAN DE LA MANO ===== -->
+  <section class="slide" data-blk="Desposicionamiento precio-valor">
+    <div class="frame-t"></div>
+    <div class="kicker">Precio ↔ valor van de la mano</div>
+    <div class="lead frag" style="margin-bottom:6px">Elige dónde quieres estar… y sé coherente.</div>
+    <div class="eje frag"><span>Precio bajo</span><span>Medio-alto</span><span class="valor">Premium</span></div>
+    <div class="ejebar frag"></div>
+    <div class="body frag" style="margin-top:30px">El error más caro es el <b style="color:var(--W)">desposicionamiento precio-valor</b>: cobrar premium con propuesta de derribo, o malvender una propuesta que vale más. El precio promete; el valor tiene que cumplir.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.4 — CASO CUPRA ===== -->
+  <section class="slide" data-blk="Caso CUPRA">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · CUPRA (grupo SEAT / Volkswagen)</div>
+    <div class="cupra">
+      <div class="paso frag"><div class="et">Problema</div><p>SEAT, marca media y conocida. Intenta <b>subir precio</b> y no puede: el cliente siempre la ve "de nivel medio". Subir = desposicionarse.</p></div>
+      <div class="paso frag"><div class="et">La jugada</div><p>No suben el precio de SEAT: crean una <b>marca nueva</b> —CUPRA—, con diseño y acabado premium, fabricada en las mismas plantas. Otro posicionamiento, otro precio.</p></div>
+      <div class="paso frag"><div class="et">Resultado</div><p>Precio <b>+40-50%</b>… y la gente compra.</p></div>
+    </div>
+    <div class="stats frag">
+      <div class="stat"><div class="n">+218%</div><div class="l">ventas 2019 → 2021</div></div>
+      <div class="stat"><div class="n">+35%</div><div class="l">beneficio por coche</div></div>
+    </div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.5 — TU DECISIÓN ===== -->
+  <section class="slide" data-blk="Tu decisión">
+    <div class="frame-t"></div>
+    <div class="kicker">Tu turno</div>
+    <div class="lead frag" style="margin-bottom:22px">¿Dónde estás <span class="em">hoy</span>… y dónde quieres estar <span class="em">mañana?</span></div>
+    <div class="tres">
+      <div class="op frag"><h3>Precio bajo</h3><p>Gran volumen, lo mínimo demandado, sin extras.</p></div>
+      <div class="op frag"><h3>Medio-alto</h3><p>Equilibrio valor-precio para un cliente que compara.</p></div>
+      <div class="op frag"><h3>Premium</h3><p>Exclusivo, para quien paga por lo mejor.</p></div>
+    </div>
+    <div class="nota frag" style="margin-top:24px">No hay opción mala. La mala es no haberla elegido.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.6 — PUENTE: DE LA ETIQUETA AL MAPA ===== -->
+  <section class="slide" data-blk="De la etiqueta al mapa">
+    <div class="frame-t"></div>
+    <div class="kicker">De la etiqueta al mapa</div>
+    <h1 class="frag">"Premium" o "barato" es una <span class="em">etiqueta.</span></h1>
+    <div class="body frag" style="margin-top:24px;max-width:40ch">La <b style="color:var(--W)">curva de valor</b> la convierte en un mapa: qué le ofreces al cliente en cada cosa que le importa, frente a tu competencia. Es la herramienta para ver en qué compites de verdad.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.7 — FACTORES COMPETITIVOS ===== -->
+  <section class="slide" data-blk="Factores competitivos">
+    <div class="frame-t"></div>
+    <div class="kicker">El punto de partida</div>
+    <div class="lead frag" style="margin-bottom:8px">Los <span class="em">factores competitivos</span> son aquello en lo que las empresas de tu sector invierten para dar valor.</div>
+    <div class="facts">
+      <div class="factrow frag"><div class="sec">Restauración</div><div class="chips"><span class="chipv pre">precio</span><span class="chipv">localización</span><span class="chipv">calidad de la comida</span><span class="chipv">chef</span><span class="chipv">ambiente</span></div></div>
+      <div class="factrow frag"><div class="sec">Automóvil</div><div class="chips"><span class="chipv pre">precio</span><span class="chipv">marca</span><span class="chipv">motor</span><span class="chipv">diseño</span><span class="chipv">amplitud de gama</span></div></div>
+      <div class="factrow frag"><div class="sec">Climatización</div><div class="chips"><span class="chipv pre">precio</span><span class="chipv">asesoramiento</span><span class="chipv">plazo</span><span class="chipv">eficiencia</span><span class="chipv">postventa</span></div></div>
+    </div>
+    <div class="nota frag" style="margin-top:22px">El precio es siempre uno de ellos. Tu trabajo: elegir los 5-6 que de verdad deciden a tu cliente.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.8 — QUÉ ES LA CURVA DE VALOR ===== -->
+  <section class="slide" data-blk="Qué es la curva de valor">
+    <div class="frame-t"></div>
+    <div class="kicker">La curva de valor · cómo se lee</div>
+    <div class="sketch frag">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <line x1="40" y1="30" x2="40" y2="200" stroke="#222" stroke-width="1"/>
+        <line x1="40" y1="200" x2="540" y2="200" stroke="#222" stroke-width="1"/>
+        <text x="20" y="38" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">5</text>
+        <text x="20" y="203" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">1</text>
+        <text x="40" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Precio</text>
+        <text x="165" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Asesor.</text>
+        <text x="290" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Plazo</text>
+        <text x="415" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Postventa</text>
+        <text x="525" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Garantía</text>
+        <polyline fill="none" stroke="#5b9bd5" stroke-width="2.5" points="40,180 165,180 290,70 415,180 525,150"/>
+        <polyline fill="none" stroke="#E8C223" stroke-width="3.2" points="40,110 165,45 290,90 415,45 525,55"/>
+      </svg>
+    </div>
+    <div class="regla frag" style="margin-top:14px;font-size:clamp(16px,2.1vw,26px)">Más alto = más inversión = <span class="em">más valor</span> (también el precio).</div>
+    <div class="nota frag" style="margin-top:10px">Puedes comparar con el sector entero, con un segmento (los low-cost) o con competidores concretos.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.9 — POR QUÉ ES TAN POTENTE ===== -->
+  <section class="slide" data-blk="Por qué es potente">
+    <div class="frame-t"></div>
+    <div class="kicker">Por qué es tan potente</div>
+    <div class="lead frag" style="margin-bottom:24px">De un vistazo entiendes la <span class="em">dinámica</span> de tu sector, a tus <span class="em">competidores</span> y tu propia <span class="em">propuesta</span>.</div>
+    <div class="regla frag">Donde tu línea se despega de las demás está tu <span class="em">posicionamiento real.</span></div>
+    <div class="nota frag" style="margin-top:14px">Si tu curva es igual a la de todos, no tienes diferenciación: compites por precio.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.10 — LAS 4 ACCIONES (RICE) ===== -->
+  <section class="slide" data-blk="Las 4 acciones">
+    <div class="frame-t"></div>
+    <div class="kicker">Cómo se mueve la curva · las 4 acciones</div>
+    <div class="rice2">
+      <div class="qd menos frag">
+        <div class="h">↓ Menos coste</div>
+        <p><b class="em">Reducir</b> y <b class="em">Eliminar</b> lo que el cliente no valora. Dejas de invertir donde no te lo pagan.</p>
+      </div>
+      <div class="qd mas frag">
+        <div class="h">↑ Más valor</div>
+        <p><b class="em">Incrementar</b> y <b class="em">Crear</b> lo que sí valora. Inviertes donde te diferencia.</p>
+      </div>
+    </div>
+    <div class="regla frag" style="margin-top:22px;font-size:clamp(17px,2.2vw,28px)">Una curva ganadora no es la más alta en todo: es la más <span class="em">distinta</span> donde importa.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA A0 — FOTO DEL SECTOR ANTES DE KINEPOLIS ===== -->
+  <section class="slide" data-blk="Antes de Kinepolis">
+    <div class="frame-t"></div>
+    <div class="kicker">Antes de Kinepolis · el cine belga en los 80</div>
+    <div class="lead frag" style="margin-bottom:24px">Todos los cines competían <span class="em">en lo mismo.</span></div>
+    <div class="frag" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:760px">
+      <span class="chipv">Salas pequeñas en el centro</span>
+      <span class="chipv">Pocas pantallas</span>
+      <span class="chipv">Cartelera parecida</span>
+      <span class="chipv">Experiencia estándar</span>
+    </div>
+    <div class="nota frag" style="margin-top:26px">Si todos ofrecen casi lo mismo, el cliente decide por <b style="color:var(--W)">cercanía, película y precio</b>. Eso es un <b style="color:var(--rojo)">océano rojo</b>: pelea por la misma cuota.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA A — KINEPOLIS: LA MATRIZ EN ACCIÓN ===== -->
+  <section class="slide" data-blk="Caso Kinepolis">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · Kinepolis (Bruselas, 1988)</div>
+    <div class="lead frag" style="font-size:clamp(16px,2.2vw,28px);margin-bottom:12px">El cine no compitió con otros cines: <span class="em">rediseñó el plan.</span></div>
+    <div class="errc-h frag"><span class="c">↓ Bajan coste</span><span class="v">↑ Suben valor</span></div>
+    <div class="errc">
+      <div class="eq elim frag"><div class="h">Eliminar</div><p><b>Cines pequeños y dispersos</b>, con experiencia desigual.</p></div>
+      <div class="eq elev frag"><div class="h">Elevar</div><p>Pantalla, sonido, butacas, <b>aparcamiento</b>, variedad de películas.</p></div>
+      <div class="eq red frag"><div class="h">Reducir</div><p>Salas saturadas, horarios escasos, mala visibilidad.</p></div>
+      <div class="eq crea frag"><div class="h">Crear</div><p>El <b>megaplex</b>: 25 salas, ocio completo en un solo destino.</p></div>
+    </div>
+    <div class="mini frag">
+      <svg viewBox="0 0 440 130" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="12" x2="30" y2="100" stroke="#222" stroke-width="1"/>
+        <line x1="30" y1="100" x2="410" y2="100" stroke="#222" stroke-width="1"/>
+        <polyline fill="none" stroke="#5b9bd5" stroke-width="2" points="30,56 125,34 220,78 315,78 410,78"/>
+        <polyline fill="none" stroke="#E8C223" stroke-width="2.8" points="30,78 125,78 220,12 315,12 410,12"/>
+        <text x="30" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Precio</text>
+        <text x="125" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Cercanía</text>
+        <text x="220" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Experiencia</text>
+        <text x="315" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Variedad</text>
+        <text x="410" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Escala</text>
+      </svg>
+    </div>
+    <div class="nota frag" style="margin-top:8px;font-size:clamp(12px,1.45vw,18px)"><span style="color:#5b9bd5">Cine tradicional</span> vs <span style="color:var(--Y)">Kinepolis</span>: misma industria, curva distinta — más valor y menos coste por espectador a la vez.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA A2 — CITIZENM (SEGUNDO CASO, OTRO SECTOR) ===== -->
+  <section class="slide" data-blk="Caso CitizenM">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · CitizenM (hoteles)</div>
+    <div class="lead frag" style="font-size:clamp(16px,2.2vw,28px);margin-bottom:12px">Mismo patrón, <span class="em">otro sector.</span></div>
+    <div class="errc-h frag"><span class="c">↓ Bajan coste</span><span class="v">↑ Suben valor</span></div>
+    <div class="errc">
+      <div class="eq elim frag"><div class="h">Eliminar</div><p>Recepción solemne, botones, <b>restaurante formal</b>.</p></div>
+      <div class="eq elev frag"><div class="h">Elevar</div><p><b>Diseño, cama, ducha</b>, tecnología y ubicación.</p></div>
+      <div class="eq red frag"><div class="h">Reducir</div><p>El tamaño de habitación y el personal repetitivo.</p></div>
+      <div class="eq crea frag"><div class="h">Crear</div><p><b>Check-in exprés</b> y zonas comunes que sí se usan.</p></div>
+    </div>
+    <div class="nota frag" style="margin-top:18px">Cinco estrellas en lo que el viajero usa; cero en lo que no. <b style="color:var(--W)">Lujo a precio de tres estrellas.</b></div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA B — EL PATRÓN ===== -->
+  <section class="slide" data-blk="El patrón">
+    <div class="frame-t"></div>
+    <div class="kicker">Por qué funciona · el patrón</div>
+    <div class="lead frag" style="font-size:clamp(17px,2.3vw,30px);margin-bottom:18px">Todos los que lo logran repiten los <span class="em">mismos cuatro movimientos.</span></div>
+    <div class="patron">
+      <div class="prow frag"><div class="nn">1</div><p>Miran a los <b>no-clientes</b>: quien no compra, compra poco o usa una alternativa.</p></div>
+      <div class="prow frag"><div class="nn">2</div><p><b>Reordenan</b> atributos: suben lo que de verdad importa, bajan lo irrelevante. No añaden de todo.</p></div>
+      <div class="prow frag"><div class="nn">3</div><p>Cambian la <b>base del coste</b>: a más escala, menos coste por espectador.</p></div>
+      <div class="prow frag"><div class="nn">4</div><p>No compiten <b>solo por precio</b>: algo más simple y más claro, con menos coste estructural.</p></div>
+    </div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA C — ERRC DE TU NEGOCIO (CLIMATIZACIÓN) ===== -->
+  <section class="slide" data-blk="ERRC de tu negocio">
+    <div class="frame-t"></div>
+    <div class="kicker">Tu turno · ERRC de una climatizadora</div>
+    <div class="errc-h frag"><span class="c">↓ Bajan coste</span><span class="v">↑ Suben valor</span></div>
+    <div class="errc">
+      <div class="eq elim frag"><div class="h">Eliminar</div><p>El <b>presupuesto genérico por email</b> sin pisar la casa.</p></div>
+      <div class="eq elev frag"><div class="h">Elevar</div><p><b>Asesoramiento técnico</b>, eficiencia y postventa.</p></div>
+      <div class="eq red frag"><div class="h">Reducir</div><p>La <b>gama infinita de marcas</b> que marea al cliente.</p></div>
+      <div class="eq crea frag"><div class="h">Crear</div><p><b>Mantenimiento anual</b> + garantía extendida + financiación.</p></div>
+    </div>
+    <div class="nota frag" style="margin-top:18px">Esto es justo lo que vas a rellenar ahora en la herramienta, para tu negocio.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.11 — INNOVACIÓN EN VALOR ===== -->
+  <section class="slide" data-blk="Innovación en valor">
+    <div class="frame-t"></div>
+    <div class="kicker">La jugada de fondo</div>
+    <div class="lead frag" style="margin-bottom:10px">No elijas entre dar más valor <span class="em">o</span> costar menos.</div>
+    <div class="inv">
+      <div class="col v frag"><div class="arr">↑</div><div class="t">Más valor</div><div class="s">incrementar · crear</div></div>
+      <div class="col c frag"><div class="arr">↓</div><div class="t">Menos coste</div><div class="s">reducir · eliminar</div></div>
+    </div>
+    <div class="regla frag" style="margin-top:22px">Las dos a la vez: así sales de la <span class="em">guerra de precios.</span></div>
+    <div class="nota frag" style="margin-top:12px">Y enlaza con el Paso 3: reducir/eliminar baja tu coste (margen); incrementar/crear sube el valor (precio).</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== NUEVA D — AVISO: LA EJECUCIÓN MANDA (TATA NANO) ===== -->
+  <section class="slide" data-blk="Aviso ejecución">
+    <div class="frame-t"></div>
+    <div class="kicker">Aviso a navegantes · la ejecución manda</div>
+    <div class="lead frag">Una buena matriz <span class="em">no garantiza</span> un buen negocio.</div>
+    <div class="body frag" style="margin-top:24px;max-width:44ch">El Tata Nano fue el coche más barato del mundo, redondo sobre el papel. Y fracasó: comprar coche también cubre una <b style="color:var(--W)">motivación de estatus</b> — y "<b style="color:var(--W)">lo más barato</b>" la dejaba sin cubrir.</div>
+    <div class="regla frag" style="margin-top:22px;font-size:clamp(17px,2.2vw,28px)">Si la propuesta choca con lo que de verdad mueve a comprar, el océano azul no se convierte en dinero.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.12 — HERRAMIENTA EN VIVO ===== -->
+  <section class="slide tool" data-blk="Curva de valor en vivo">
+    <div class="frame-t"></div>
+    <iframe src="curva_valor.html#climatizacion" title="Herramienta de curva de valor"></iframe>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 2.13 — CIERRE + PUENTE AL PASO 3 ===== -->
+  <section class="slide" data-blk="Cierre">
+    <div class="frame-t"></div>
+    <div class="kicker">La idea que te llevas</div>
+    <h1 class="frag">Ya sabes en qué compites. Ahora: <span class="em">¿cuánto te cuesta competir ahí?</span></h1>
+    <div class="body frag" style="margin-top:24px;max-width:40ch">Cada cosa que pones en tu curva tiene un coste. El Paso 3 te dice si tu precio lo cubre y cuánto margen te deja. Y esta misma curva volverá en el Paso 5, cuando veamos cómo se comunica en la venta.</div>
+    <div class="frame-b"></div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="pb" onclick="prev()">◀ Anterior</button>
+  <span class="count" id="count">1 / 19</span>
+  <button id="nb" onclick="next()">Siguiente ▶</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let si=0;
+
+function show(i){
+  slides.forEach((s,idx)=>{
+    const act=idx===i;
+    s.classList.toggle('active',act);
+    const fr=[...s.querySelectorAll('.frag')];
+    if(act){
+      fr.forEach((f,k)=>{ f.style.transitionDelay=(k*0.12)+'s'; f.classList.add('on'); });
+    } else {
+      fr.forEach(f=>{ f.classList.remove('on'); f.style.transitionDelay='0s'; });
+    }
+  });
+  si=i;
+  document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('pb').disabled=(i===0);
+  document.getElementById('nb').disabled=(i===slides.length-1);
+}
+function next(){ if(si<slides.length-1) show(si+1); }
+function prev(){ if(si>0) show(si-1); }
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
+show(0);
+
+/* ═══ HANDSHAKE con el contenedor (taller_sistema_precios.html) ═══
+   Solo embebido. Envuelve next/prev: en el borde avisa al contenedor para
+   cambiar de paso. Reenvía teclas si tiene el foco (puntero continuo).   */
+(function(){
+  if(window.parent===window) return;
+  var _next=next, _prev=prev;
+  next=function(){ if(si>=slides.length-1){ window.parent.postMessage({na:'boundary',dir:1},'*'); } else { _next(); } };
+  prev=function(){ if(si<=0){ window.parent.postMessage({na:'boundary',dir:-1},'*'); } else { _prev(); } };
+  window.addEventListener('message',function(e){
+    var d=e.data||{};
+    if(d.na==='enter-start') show(0);
+    else if(d.na==='enter-end') show(slides.length-1);
+    else if(d.na==='next') next();
+    else if(d.na==='prev') prev();
+  });
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:1},'*'); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:-1},'*'); }
+  },true);
+  window.parent.postMessage({na:'ready'},'*');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso 1 — ¿Vendes producto o servicio? · slides (contenido)</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<!-- Contenido del Paso 1 SIN header/footer/chrome. El chrome (logo, navegación, contador) lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
+<!-- TEXTO DE PANTALLA (capa profesional). El guion fino hablado lo pone Antonio sobre esta base. Casos del original: climatización (producto→servicio) y agencia (servicio→producto). -->
+<style>
+  :root{
+    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
+    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b; --azul:#5b9bd5;
+    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--BG);color:var(--W);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+
+  .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
+  .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
+    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+  .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
+  .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
+  .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
+
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(36px,5vw,72px) clamp(40px,8vw,120px);text-align:center}
+  .slide.active{display:flex}
+  .slide::before{content:"";position:absolute;inset:0;background-image:
+    linear-gradient(var(--C2) 1px,transparent 1px),linear-gradient(90deg,var(--C2) 1px,transparent 1px);
+    background-size:52px 52px;opacity:.18;pointer-events:none}
+  .frame-t{position:absolute;top:0;left:8%;right:8%;height:2px;background:var(--Y);z-index:1}
+  .frame-b{position:absolute;bottom:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--Y),transparent);z-index:1}
+  .slide>*{position:relative;z-index:2}
+
+  .kicker{font-family:var(--sans);font-size:clamp(10px,1.1vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--Y);margin-bottom:clamp(16px,2.4vw,30px)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,64px);line-height:1.06;max-width:20ch}
+  .em{color:var(--Y)}
+  .lead{font-family:var(--serif);font-size:clamp(20px,3vw,38px);line-height:1.22;max-width:24ch;color:var(--W)}
+  .body{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);line-height:1.6;color:var(--GR);max-width:40ch}
+  .regla{font-family:var(--serif);font-weight:600;font-size:clamp(20px,2.8vw,36px);color:var(--Y);max-width:26ch}
+  .nota{font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);color:var(--GR);max-width:44ch;line-height:1.5}
+
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .slide.active>*{animation:fadeIn .3s ease both}
+  .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+  .frag.on{opacity:1;transform:none}
+
+  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.32);padding:18px 22px}
+
+  /* Tres chips de clasificación (slide 2) */
+  .tipos{display:flex;gap:clamp(12px,2vw,24px);flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .tipo{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(14px,1.8vw,22px) clamp(18px,2.4vw,30px);width:min(30vw,230px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .tipo h3{font-family:var(--sans);font-weight:700;font-size:clamp(15px,1.8vw,22px);color:var(--Y);letter-spacing:.02em;margin-bottom:6px}
+  .tipo p{font-family:var(--serif);font-size:clamp(15px,1.5vw,18px);color:var(--GR);line-height:1.45}
+
+  /* Dos ramas / lente (slides 3, 4, 5) */
+  .ramas{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(12px,2vw,24px);align-items:center;width:min(94vw,920px);margin-top:8px}
+  @media(max-width:680px){.ramas{grid-template-columns:1fr}.ramas .flecha{display:none}}
+  .rama{text-align:left}
+  .rama .tag{font-family:var(--sans);font-weight:700;font-size:clamp(11px,1vw,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--GR);margin-bottom:8px}
+  .rama h3{font-family:var(--sans);font-weight:700;font-size:clamp(15px,1.9vw,23px);margin-bottom:10px;letter-spacing:.02em}
+  .rama p{font-family:var(--serif);font-size:clamp(15px,1.6vw,20px);color:var(--GR);line-height:1.5}
+  .rama ul{list-style:none;margin-top:4px}
+  .rama li{font-family:var(--serif);font-size:clamp(14px,1.45vw,18px);color:var(--GR);line-height:1.5;padding-left:14px;position:relative}
+  .rama li::before{content:"·";position:absolute;left:2px;color:var(--Y)}
+  .rama.trap h3{color:var(--W)} .rama.trap{opacity:.92}
+  .rama.move{border:1px solid var(--Y);box-shadow:0 4px 20px rgba(232,194,35,.12)} .rama.move h3{color:var(--Y)}
+  .flecha{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3vw,40px);color:var(--Y);text-align:center}
+  @media(max-width:680px){.flecha{display:none}}
+  .oro{margin-top:22px;font-family:var(--serif);font-weight:600;font-size:clamp(17px,2.2vw,28px);color:#fff;max-width:32ch}
+  .match{font-family:var(--sans);font-weight:800;letter-spacing:.04em;color:var(--Y)}
+  /* Timer de aula — reloj grande y visible, anclado arriba a la derecha */
+  .aula-timer{position:absolute;top:clamp(46px,8vh,86px);right:clamp(28px,4.5vw,70px);z-index:6;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    background:rgba(12,12,12,.74);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+    border:2px solid var(--Y);border-radius:18px;padding:clamp(14px,1.7vw,22px) clamp(22px,2.8vw,38px);
+    font-family:var(--sans);cursor:pointer;user-select:none;box-shadow:0 6px 30px rgba(0,0,0,.55);transition:box-shadow .2s,transform .15s}
+  .aula-timer:hover{transform:translateY(-1px)}
+  .aula-timer.running{box-shadow:0 0 40px rgba(232,194,35,.32)}
+  .aula-timer .at-time{font-size:clamp(42px,5.4vw,66px);font-weight:700;color:var(--Y);font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:1}
+  .aula-timer .at-label{font-size:clamp(9px,1vw,11px);letter-spacing:.16em;text-transform:uppercase;color:#cfcfcf;font-weight:600;display:flex;align-items:center;gap:7px}
+  .aula-timer .at-ico{color:var(--Y);font-size:1.05em}
+
+  /* Cuestionario (slide 6) */
+  .quiz{display:flex;flex-direction:column;gap:clamp(10px,1.5vw,16px);width:min(88vw,760px);margin-top:6px;text-align:left}
+  .q{display:flex;gap:14px;align-items:flex-start;background:var(--C2);border:1px solid var(--C3);border-radius:10px;
+    padding:clamp(12px,1.6vw,18px) clamp(14px,2vw,22px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .q .n{flex:0 0 auto;width:clamp(26px,2.4vw,34px);height:clamp(26px,2.4vw,34px);border-radius:50%;background:var(--Y);color:var(--K);
+    font-family:var(--sans);font-weight:800;font-size:clamp(13px,1.5vw,18px);display:flex;align-items:center;justify-content:center}
+  .q p{font-family:var(--serif);font-size:clamp(16px,1.7vw,22px);color:var(--W);line-height:1.4}
+  .q p b{color:var(--Y);font-weight:600}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- ===== 1.1 — PORTADA ===== -->
+  <section class="slide" data-blk="Portada">
+    <div class="frame-t"></div>
+    <div class="kicker">Paso 1 · ¿Qué vendes?</div>
+    <div class="lead frag">Saber qué vendes es el primer paso hacia el éxito.</div>
+    <h1 class="frag" style="margin-top:20px">¿Vendes <span class="em">producto o servicio?</span></h1>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.2 — LA CLASIFICACIÓN ===== -->
+  <section class="slide" data-blk="La clasificación">
+    <div class="frame-t"></div>
+    <div class="kicker">La clasificación que lo cambia todo</div>
+    <div class="lead frag" style="margin-bottom:30px">Toda venta es un producto, un servicio… o una mezcla de los dos.</div>
+    <div class="tipos">
+      <div class="tipo frag"><h3>Producto</h3><p>Algo tangible que el cliente se lleva. Un tornillo, una caldera, una caja.</p></div>
+      <div class="tipo frag"><h3>Servicio</h3><p>Un trabajo o resultado que tú haces. Una consultoría, una instalación.</p></div>
+      <div class="tipo frag"><h3>Mixto</h3><p>Producto + servicio en una misma oferta. La climatización, sin ir más lejos.</p></div>
+    </div>
+    <div class="body frag" style="margin-top:30px">Esta clasificación tan sencilla abre una de las estrategias de precio de más éxito.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.3 — LA JUGADA CONTRARIAN ===== -->
+  <section class="slide" data-blk="La estrategia CONTRARIAN">
+    <div class="frame-t"></div>
+    <div class="kicker">La estrategia · CONTRARIAN</div>
+    <div class="lead frag" style="margin-bottom:28px">No vendas lo que crees que vendes: vende lo que más te <span class="em">renta a ti</span> y más <span class="em">deseo</span> genera en el cliente.</div>
+    <div class="ramas">
+      <div class="rama move card frag">
+        <div class="tag">Si vendes servicio</div>
+        <h3>Productízalo</h3>
+        <p>Ciérralo en un paquete con nombre, alcance y precio fijo. Escala mejor y dejas de competir por horas.</p>
+      </div>
+      <div class="flecha frag">⇄</div>
+      <div class="rama move card frag">
+        <div class="tag">Si vendes producto</div>
+        <h3>Servicifícalo</h3>
+        <p>Envuélvelo en asesoría, instalación, mantenimiento o garantía. Sales de la guerra de tarifas del proveedor.</p>
+      </div>
+    </div>
+    <div class="oro frag">Cuando lo que te renta a ti coincide con lo que desea el cliente → <span class="match">MATCH.</span></div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.4 — CASO CLIMATIZACIÓN (producto → servicio) ===== -->
+  <section class="slide" data-blk="Caso climatización">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · climatización (mixto)</div>
+    <div class="lead frag" style="margin-bottom:24px">Un presupuesto de calefacción: caldera, radiadores e instalación.</div>
+    <div class="ramas">
+      <div class="rama trap card frag">
+        <div class="tag">Lo ves como producto</div>
+        <h3>Compites con la tarifa del proveedor</h3>
+        <ul>
+          <li>El precio lo marca el fabricante, no tú</li>
+          <li>Te sientas a competir con todas las empresas</li>
+          <li>Margen de derribo</li>
+        </ul>
+      </div>
+      <div class="flecha frag">→</div>
+      <div class="rama move card frag">
+        <div class="tag">Ofértalo como servicio</div>
+        <h3>El precio lo pones tú</h3>
+        <ul>
+          <li>Vendes confort, eficiencia y tranquilidad</li>
+          <li>Proyecto + instalación + mantenimiento</li>
+          <li>Sales de la comparación de equipos</li>
+        </ul>
+      </div>
+    </div>
+    <div class="oro frag">Mismo presupuesto, otro foco: dejas de vender una caldera y empiezas a vender una solución.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.5 — CASO AGENCIA (servicio → producto) ===== -->
+  <section class="slide" data-blk="Caso agencia">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · agencia de marketing (servicio)</div>
+    <div class="lead frag" style="margin-bottom:24px">Un presupuesto: marca, estrategia y gestión de redes sociales.</div>
+    <div class="ramas">
+      <div class="rama trap card frag">
+        <div class="tag">Lo vendes como servicio</div>
+        <h3>Compites por precio… o regalando horas</h3>
+        <ul>
+          <li>Igual que el resto de agencias</li>
+          <li>Para ganar el presupuesto, das más servicios</li>
+          <li>Cada cliente, un traje a medida</li>
+        </ul>
+      </div>
+      <div class="flecha frag">→</div>
+      <div class="rama move card frag">
+        <div class="tag">Ciérralo como producto</div>
+        <h3>Un paquete cerrado y escalable</h3>
+        <ul>
+          <li>Nombre, alcance y precio fijo</li>
+          <li>Lo replicas sin reinventarlo cada vez</li>
+          <li>Dejas de vender horas, vendes un resultado</li>
+        </ul>
+      </div>
+    </div>
+    <div class="oro frag">El movimiento contrario al de la climatización… y por la misma razón: salir de competir por precio.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.6 — CUESTIONARIO (5 preguntas, reflexión revelada) ===== -->
+  <section class="slide" data-blk="Cuestionario · 5 preguntas">
+    <div class="frame-t"></div>
+    <div class="kicker">Tu turno · 5 preguntas</div>
+    <div class="nota frag" style="margin-bottom:20px;color:var(--W)">Respóndelas pensando en <b>tu</b> negocio.</div>
+    <div class="quiz">
+      <div class="q frag"><div class="n">1</div><p>¿Por qué te paga el cliente: por algo <b>tangible</b> que se lleva, o por un <b>resultado</b> que haces?</p></div>
+      <div class="q frag"><div class="n">2</div><p>En tu presupuesto, ¿las partidas grandes son <b>equipos y materiales</b> (producto) o <b>tu trabajo</b> (servicio)?</p></div>
+      <div class="q frag"><div class="n">3</div><p>Tu precio, ¿lo pones <b>tú</b>… o te lo marca la tarifa del proveedor y lo que cobran los demás?</p></div>
+      <div class="q frag"><div class="n">4</div><p>Tu jugada contrarian: si vendes servicio, ¿podrías <b>cerrarlo como producto</b>? Si vendes producto, ¿podrías <b>envolverlo en servicio</b>?</p></div>
+      <div class="q frag"><div class="n">5</div><p>¿Qué versión te haría competir <b>menos por precio</b> y generar <b>más deseo</b> en el cliente?</p></div>
+    </div>
+    <div class="aula-timer" data-min="5"><div class="at-time">05:00</div><div class="at-label"><span class="at-ico">▶</span><span class="at-txt">Pulsa para iniciar</span></div></div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 1.7 — CIERRE + PUENTE AL PASO 2 ===== -->
+  <section class="slide" data-blk="Cierre">
+    <div class="frame-t"></div>
+    <div class="kicker">La idea que te llevas</div>
+    <h1 class="frag">Lo que vendes hoy no tiene por qué ser lo que <span class="em">vendas mañana.</span></h1>
+    <div class="body frag" style="margin-top:24px;max-width:40ch">Decidir qué vendes, y cómo cambiarlo, es el primer paso hacia una oferta y unos precios más atractivos. Y según cómo te <b style="color:var(--W)">posiciones</b>, así será tu precio. Eso es el Paso 2.</div>
+    <div class="frame-b"></div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="pb" onclick="prev()">◀ Anterior</button>
+  <span class="count" id="count">1 / 7</span>
+  <button id="nb" onclick="next()">Siguiente ▶</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let si=0;
+
+// Al ENTRAR en una slide, su contenido aparece con stagger (como el Paso 4/6).
+function show(i){
+  slides.forEach((s,idx)=>{
+    const act=idx===i;
+    s.classList.toggle('active',act);
+    const fr=[...s.querySelectorAll('.frag')];
+    if(act){
+      fr.forEach((f,k)=>{ f.style.transitionDelay=(k*0.12)+'s'; f.classList.add('on'); });
+    } else {
+      fr.forEach(f=>{ f.classList.remove('on'); f.style.transitionDelay='0s'; });
+    }
+  });
+  si=i;
+  document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('pb').disabled=(i===0);
+  document.getElementById('nb').disabled=(i===slides.length-1);
+}
+function next(){ if(si<slides.length-1) show(si+1); }
+function prev(){ if(si>0) show(si-1); }
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
+show(0);
+
+/* ═══ TIMER DE AULA (ejercicio escrito) — clic: iniciar / pausar / reiniciar ═══ */
+(function(){
+  function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+  document.querySelectorAll('.aula-timer').forEach(function(el){
+    var total=(parseInt(el.dataset.min||'5',10))*60, rem=total, iv=null, st='idle';
+    var ico=el.querySelector('.at-ico'), txt=el.querySelector('.at-txt'), time=el.querySelector('.at-time');
+    function paint(){time.textContent=fmt(rem);}
+    function set(i,t){ico.textContent=i;txt.textContent=t;}
+    function tick(){rem--; if(rem<=0){rem=0;paint();done();return;} paint();}
+    function run(){st='running';el.classList.add('running');set('⏸','Tiempo restante');paint();iv=setInterval(tick,1000);}
+    function pause(){st='paused';clearInterval(iv);el.classList.remove('running');set('▶','En pausa · reanudar');}
+    function done(){st='done';clearInterval(iv);el.classList.remove('running');set('↻','¡Tiempo! · reiniciar');}
+    function reset(){clearInterval(iv);rem=total;st='idle';el.classList.remove('running');set('▶','Pulsa para iniciar');paint();}
+    el.addEventListener('click',function(e){e.stopPropagation();
+      if(st==='idle'||st==='paused')run();
+      else if(st==='running')pause();
+      else reset();});
+  });
+})();
+
+/* ═══ HANDSHAKE con el contenedor (taller_sistema_precios.html) ═══
+   Solo se activa embebido en un iframe. Envuelve next/prev: en el borde,
+   en vez de no hacer nada, avisa al contenedor para que cambie de paso.   */
+(function(){
+  if(window.parent===window) return;                 // uso suelto: no hace nada
+  var _next=next, _prev=prev;
+  next=function(){ if(si>=slides.length-1){ window.parent.postMessage({na:'boundary',dir:1},'*'); } else { _next(); } };
+  prev=function(){ if(si<=0){ window.parent.postMessage({na:'boundary',dir:-1},'*'); } else { _prev(); } };
+  window.addEventListener('message',function(e){
+    var d=e.data||{};
+    if(d.na==='enter-start') show(0);
+    else if(d.na==='enter-end') show(slides.length-1);
+    else if(d.na==='next') next();
+    else if(d.na==='prev') prev();
+  });
+  // ÚNICO CEREBRO: si este iframe tiene el foco (p.ej. tras un clic de ratón),
+  // NO navega por su cuenta — reenvía la tecla al contenedor. Captura (true) para
+  // adelantarse al keydown local y bloquearlo. Así el puntero inalámbrico es continuo.
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:1},'*'); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:-1},'*'); }
+  },true);
+  window.parent.postMessage({na:'ready'},'*');         // "estoy listo, dime por dónde entro"
+})();
+</script>
+</body>
+</html>

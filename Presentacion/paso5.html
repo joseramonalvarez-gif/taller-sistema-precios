@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso 5 — El proceso de venta como palanca de precio · slides (contenido)</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<!-- Contenido del Paso 5 SIN header/footer/chrome. El chrome lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
+<!-- TEXTO DE PANTALLA (capa profesional). El guion fino hablado lo pone Antonio (él conduce el Paso 5). Caso MANGO, definición de proceso de venta, quesitos y casos reales = del original (masterclass maquetada). Puente a la curva de valor (Paso 2) y herramienta de quesitos = ampliación nueva pedida por Antonio. -->
+<style>
+  :root{
+    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
+    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b; --azul:#5b9bd5; --cobre:#c9885b;
+    --mostaza-dim:#9a812a;
+    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--BG);color:var(--W);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+
+  .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
+  .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
+    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+  .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
+  .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
+  .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
+
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(36px,5vw,72px) clamp(40px,8vw,120px);text-align:center}
+  .slide.active{display:flex}
+  .slide::before{content:"";position:absolute;inset:0;background-image:
+    linear-gradient(var(--C2) 1px,transparent 1px),linear-gradient(90deg,var(--C2) 1px,transparent 1px);
+    background-size:52px 52px;opacity:.18;pointer-events:none}
+  .frame-t{position:absolute;top:0;left:8%;right:8%;height:2px;background:var(--Y);z-index:1}
+  .frame-b{position:absolute;bottom:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--Y),transparent);z-index:1}
+  .slide>*{position:relative;z-index:2}
+
+  .kicker{font-family:var(--sans);font-size:clamp(10px,1.1vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--Y);margin-bottom:clamp(16px,2.4vw,30px)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,64px);line-height:1.06;max-width:20ch}
+  .em{color:var(--Y)}
+  .lead{font-family:var(--serif);font-size:clamp(20px,3vw,38px);line-height:1.22;max-width:24ch;color:var(--W)}
+  .body{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);line-height:1.6;color:var(--GR);max-width:42ch}
+  .body b{color:var(--W);font-weight:600}
+  .regla{font-family:var(--serif);font-weight:600;font-size:clamp(20px,2.8vw,36px);color:var(--Y);max-width:28ch}
+  .nota{font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);color:var(--GR);max-width:46ch;line-height:1.5}
+
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .slide.active>*{animation:fadeIn .3s ease both}
+  .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+  .frag.on{opacity:1;transform:none}
+
+  /* Tres derivadas / opciones (cards) */
+  .tres{display:flex;gap:clamp(12px,2vw,22px);flex-wrap:wrap;justify-content:center;margin-top:6px}
+  .op{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(14px,1.8vw,22px) clamp(18px,2.2vw,26px);width:min(30vw,250px);box-shadow:0 2px 12px rgba(0,0,0,.32);text-align:left}
+  .op h3{font-family:var(--sans);font-weight:700;font-size:clamp(15px,1.6vw,20px);color:var(--Y);margin-bottom:6px}
+  .op p{font-family:var(--serif);font-size:clamp(14px,1.45vw,17px);color:var(--GR);line-height:1.42}
+
+  /* Stats (resultados) */
+  .stats{display:flex;gap:clamp(18px,3vw,46px);justify-content:center;margin-top:24px;flex-wrap:wrap}
+  .stat .n{font-family:var(--sans);font-weight:800;font-size:clamp(30px,5vw,62px);color:var(--Y);line-height:1}
+  .stat .l{font-family:var(--serif);font-size:clamp(14px,1.5vw,18px);color:var(--GR);margin-top:6px;max-width:16ch;margin-left:auto;margin-right:auto}
+
+  /* Lista de pasos (la vuelta de Mango) */
+  .lista{display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:center;width:min(90vw,720px);margin-top:8px}
+  .lista .it{font-family:var(--sans);font-size:clamp(14px,1.4vw,17px);color:var(--W);background:var(--C2);border:1px solid var(--C3);border-radius:8px;padding:7px 13px}
+
+  /* Quesitos grid */
+  .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.6vw,18px);width:min(94vw,860px);margin-top:6px}
+  @media(max-width:760px){.qgrid{grid-template-columns:repeat(2,1fr)}}
+  .qc{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(13px,1.6vw,20px);text-align:left;box-shadow:0 2px 12px rgba(0,0,0,.32);position:relative}
+  .qc .nn{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--K);background:var(--Y);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+  .qc h4{font-family:var(--sans);font-weight:700;font-size:clamp(15px,1.5vw,19px);color:var(--W);margin-bottom:4px}
+  .qc p{font-family:var(--serif);font-size:clamp(13px,1.3vw,15px);color:var(--GR);line-height:1.38}
+
+  /* Casos reales (sector → movimiento) */
+  .facts{display:flex;flex-direction:column;gap:clamp(10px,1.5vw,15px);width:min(94vw,860px);margin-top:8px}
+  .factrow{display:grid;grid-template-columns:clamp(120px,17vw,190px) 1fr;gap:16px;align-items:center;text-align:left}
+  @media(max-width:640px){.factrow{grid-template-columns:1fr;gap:4px;text-align:center}}
+  .factrow .sec{font-family:var(--sans);font-weight:700;font-size:clamp(14px,1.4vw,18px);color:var(--Y);text-align:right}
+  @media(max-width:640px){.factrow .sec{text-align:center}}
+  .factrow .mov{font-family:var(--serif);font-size:clamp(15px,1.5vw,19px);color:var(--GR);line-height:1.4}
+  .factrow .mov b{color:var(--W);font-weight:600}
+
+  /* Definición destacada */
+  .def{font-family:var(--serif);font-weight:600;font-size:clamp(18px,2.5vw,32px);line-height:1.25;color:var(--W);max-width:24ch;
+    border-left:3px solid var(--Y);padding-left:clamp(14px,2vw,24px);text-align:left}
+  .def .em{color:var(--Y)}
+
+  /* Narrativa (nota final agencia) */
+  .narr{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);line-height:1.55;color:var(--GR);max-width:40ch;text-align:left}
+  .narr b{color:var(--W);font-weight:600}
+  .narr .q{color:var(--Y);font-style:italic}
+
+  /* Herramienta integrada */
+  .slide.tool{padding:6px 10px}
+  .slide.tool iframe{width:min(1480px,98vw);height:100%;border:0;border-radius:10px;background:var(--BG)}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- ===== 5.1 — PORTADA ===== -->
+  <section class="slide" data-blk="Portada">
+    <div class="frame-t"></div>
+    <div class="kicker">Paso 5 · El proceso de venta</div>
+    <div class="lead frag">El precio no se mueve solo.</div>
+    <h1 class="frag" style="margin-top:20px">El proceso de venta, tu mayor <span class="em">palanca de precio.</span></h1>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.2 — EL ERROR PEREZOSO ===== -->
+  <section class="slide" data-blk="El error perezoso">
+    <div class="frame-t"></div>
+    <div class="kicker">El error más común</div>
+    <div class="lead frag">Subir o bajar el precio… y sentarse a ver qué pasa.</div>
+    <div class="body frag" style="margin-top:28px">Es el <b>sistema perezoso</b>. Si cambias un precio sin cambiar nada más, salvo milagro, será un fracaso. El precio se mueve cuando mueves la <b>experiencia</b> que lo rodea.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.3 — CASO MANGO · LA CAÍDA ===== -->
+  <section class="slide" data-blk="Caso MANGO · la caída">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · MANGO, el gigante textil</div>
+    <div class="lead frag" style="margin-bottom:8px">Bajaron precios para ganar cuota. Y se hundieron.</div>
+    <div class="tres">
+      <div class="op frag"><h3>Posicionamiento</h3><p>De "moda de calidad" pasaron a ser <b style="color:var(--W)">el primo pequeño de Zara</b>.</p></div>
+      <div class="op frag"><h3>Costes</h3><p>Competir en precio con Inditex, que lleva décadas afinando coste, es <b style="color:var(--W)">muerte por aplastamiento</b>.</p></div>
+      <div class="op frag"><h3>Psicología</h3><p>Los equipos dejan de pelear margen; el cliente espera la rebaja. <b style="color:var(--W)">El juego que hunde la empresa</b>.</p></div>
+    </div>
+    <div class="nota frag" style="margin-top:22px">Bajaron el número, pero el proceso de venta y la logística no acompañaban. Bajar precio sin alinear el proceso no es estrategia.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.4 — CASO MANGO · LA VUELTA ===== -->
+  <section class="slide" data-blk="Caso MANGO · la vuelta">
+    <div class="frame-t"></div>
+    <div class="kicker">Caso · MANGO · la vuelta de Andic</div>
+    <div class="lead frag" style="margin-bottom:14px">Volvió e hizo lo contrario: <span class="em">subir precios</span> y alinear todo.</div>
+    <div class="lista">
+      <span class="it frag">Subir precios</span>
+      <span class="it frag">Recuperar calidad</span>
+      <span class="it frag">Mejorar tiendas y ubicaciones</span>
+      <span class="it frag">Cerrar las deficitarias</span>
+      <span class="it frag">Volver a su posicionamiento propio</span>
+    </div>
+    <div class="stats frag">
+      <div class="stat"><div class="n">+15%</div><div class="l">facturación 2023 (3.104 M€)</div></div>
+      <div class="stat"><div class="n">×2</div><div class="l">beneficio neto (172 M€)</div></div>
+    </div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.5 — QUÉ ES EL PROCESO DE VENTA ===== -->
+  <section class="slide" data-blk="Qué es el proceso de venta">
+    <div class="frame-t"></div>
+    <div class="kicker">El concepto</div>
+    <div class="def frag">El proceso de venta es <span class="em">todo lo que impacta al cliente</span> desde que ve tu información hasta que termina la compra.</div>
+    <div class="body frag" style="margin-top:26px;max-width:44ch">Una tienda de Ferrari con polvo y un vendedor en chándal. O joyas de lujo en una ubicación cualquiera. El cliente <b>no te valora más porque bajes el precio</b>: te valora por una experiencia coherente con lo que cobras.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.6 — LOS 6 QUESITOS ===== -->
+  <section class="slide" data-blk="Los 6 quesitos">
+    <div class="frame-t"></div>
+    <div class="kicker">Los quesitos del proceso</div>
+    <div class="lead frag" style="margin-bottom:14px;font-size:clamp(18px,2.4vw,30px)">Seis puntos de contacto donde se decide tu precio.</div>
+    <div class="qgrid">
+      <div class="qc frag"><div class="nn">1</div><h4>Comunicación</h4><p>Qué dices y cómo te muestras antes de que te contacten.</p></div>
+      <div class="qc frag"><div class="nn">2</div><h4>Primer contacto</h4><p>Cómo recibes al cliente cuando contacta contigo.</p></div>
+      <div class="qc frag"><div class="nn">3</div><h4>Atención y experiencia</h4><p>El espacio, el trato y la atención que recibe.</p></div>
+      <div class="qc frag"><div class="nn">4</div><h4>El presupuesto</h4><p>Cómo le haces llegar la propuesta y qué transmite.</p></div>
+      <div class="qc frag"><div class="nn">5</div><h4>Extras y añadidos</h4><p>Qué incluyes de más… y cómo lo pones en valor.</p></div>
+      <div class="qc frag"><div class="nn">6</div><h4>Plazos y tiempos</h4><p>Entrega, instalación y tiempos de decisión.</p></div>
+    </div>
+    <div class="nota frag" style="margin-top:18px">Hay más según tu producto o servicio. Estos son el esqueleto.</div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.7 — CASOS REALES ===== -->
+  <section class="slide" data-blk="Casos reales">
+    <div class="frame-t"></div>
+    <div class="kicker">Funcionó de verdad</div>
+    <div class="lead frag" style="margin-bottom:8px;font-size:clamp(18px,2.4vw,30px)">Movieron el precio moviendo el <span class="em">proceso</span>, no el número.</div>
+    <div class="facts">
+      <div class="factrow frag"><div class="sec">E-commerce</div><div class="mov">Subidas de precio <b>solapadas</b> con mejor servicio, envíos y ofertas gancho. El fiel no se va.</div></div>
+      <div class="factrow frag"><div class="sec">Asesoría</div><div class="mov">Servicios simplificados + <b>software avanzado</b> y respuesta rápida. Multiplican precios y mantienen clientes.</div></div>
+      <div class="factrow frag"><div class="sec">Tienda de ropa</div><div class="mov">Poner en valor el servicio y la <b>atención personalizada</b> que el cliente no tangibilizaba.</div></div>
+      <div class="factrow frag"><div class="sec">Climatización</div><div class="mov">Trato especial, demostración, financiación y plazos medidos: <b>comprar un coche, no un calentador</b>.</div></div>
+    </div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.8 — PUENTE A LA CURVA DE VALOR ===== -->
+  <section class="slide" data-blk="Puente a la curva de valor">
+    <div class="frame-t"></div>
+    <div class="kicker">De dónde nace tu estrategia</div>
+    <div class="lead frag" style="margin-bottom:22px">¿En qué quesitos inviertes? Te lo dice tu <span class="em">curva de valor.</span></div>
+    <div class="body frag" style="max-width:46ch">Donde tu línea se despega (Paso 2), ahí <b>refuerzas el proceso</b>: ahí pones el énfasis, ahí está tu valor. Lo que no es tu ventaja, no lo regales. Así tu comunicación, tu atención y tus presupuestos cuentan la <b>misma historia</b> que tu precio.</div>
+    <div class="regla frag" style="margin-top:26px;font-size:clamp(17px,2.3vw,30px)">Posicionamiento → curva de valor → proceso de venta. Todo <span class="em">coherente.</span></div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.9 — HERRAMIENTA EN VIVO ===== -->
+  <section class="slide tool" data-blk="Mapa de quesitos en vivo">
+    <div class="frame-t"></div>
+    <iframe src="quesitos.html#climatizacion" title="Mapa de quesitos del proceso de venta"></iframe>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.10 — NOTA FINAL · AGENCIA ===== -->
+  <section class="slide" data-blk="Un detalle lo tira todo">
+    <div class="frame-t"></div>
+    <div class="kicker">Un detalle lo tira todo</div>
+    <div class="narr frag">Agencia de marketing reputada. Recibes al cliente con un café, una oficina coqueta, una presentación espectacular. Un presupuesto precioso, con casos de éxito.<br><br>Y cuando pregunta cuándo empezáis: <span class="q">"mañana mismo… o la semana que viene".</span></div>
+    <div class="regla frag" style="margin-top:26px">Un solo fallo en un quesito abre la puerta a que te <span class="em">regateen el precio.</span></div>
+    <div class="frame-b"></div>
+  </section>
+
+  <!-- ===== 5.11 — CIERRE + PUENTE AL PASO 6 ===== -->
+  <section class="slide" data-blk="Cierre">
+    <div class="frame-t"></div>
+    <div class="kicker">La idea que te llevas</div>
+    <h1 class="frag">Tu proceso de venta <span class="em">vende tu precio</span> por ti.</h1>
+    <div class="body frag" style="margin-top:24px;max-width:42ch">Y queda el último quesito, el más poderoso: la <b>mente del cliente</b>. De eso va el Paso 6 — la psicología que convierte tus precios en imanes.</div>
+    <div class="frame-b"></div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="pb" onclick="prev()">◀ Anterior</button>
+  <span class="count" id="count">1 / 11</span>
+  <button id="nb" onclick="next()">Siguiente ▶</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let si=0;
+
+function show(i){
+  slides.forEach((s,idx)=>{
+    const act=idx===i;
+    s.classList.toggle('active',act);
+    const fr=[...s.querySelectorAll('.frag')];
+    if(act){
+      fr.forEach((f,k)=>{ f.style.transitionDelay=(k*0.12)+'s'; f.classList.add('on'); });
+    } else {
+      fr.forEach(f=>{ f.classList.remove('on'); f.style.transitionDelay='0s'; });
+    }
+  });
+  si=i;
+  document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('pb').disabled=(i===0);
+  document.getElementById('nb').disabled=(i===slides.length-1);
+}
+function next(){ if(si<slides.length-1) show(si+1); }
+function prev(){ if(si>0) show(si-1); }
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
+show(0);
+
+/* ═══ HANDSHAKE con el contenedor (taller_sistema_precios.html) ═══
+   Solo embebido. Envuelve next/prev: en el borde avisa al contenedor para
+   cambiar de paso. Reenvía teclas si tiene el foco (puntero continuo).   */
+(function(){
+  if(window.parent===window) return;
+  var _next=next, _prev=prev;
+  next=function(){ if(si>=slides.length-1){ window.parent.postMessage({na:'boundary',dir:1},'*'); } else { _next(); } };
+  prev=function(){ if(si<=0){ window.parent.postMessage({na:'boundary',dir:-1},'*'); } else { _prev(); } };
+  window.addEventListener('message',function(e){
+    var d=e.data||{};
+    if(d.na==='enter-start') show(0);
+    else if(d.na==='enter-end') show(slides.length-1);
+    else if(d.na==='next') next();
+    else if(d.na==='prev') prev();
+  });
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:1},'*'); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault();e.stopImmediatePropagation();window.parent.postMessage({na:'relay',dir:-1},'*'); }
+  },true);
+  window.parent.postMessage({na:'ready'},'*');
+})();
+</script>
+</body>
+</html>
