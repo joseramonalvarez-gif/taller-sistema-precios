@@ -5,13 +5,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mapa de quesitos · Paso 5</title>
-<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
 <style>
   :root{
-    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
-    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
-    --azul:#79b0e6; --cobre:#d99c6e; --verde:#7ec77b; --rojo:#e0533d; --linea:#2a2a26;
-    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --negro:#191919; --negro-2:#1F1F1F; --carbon:#262626; --carbon-2:#2E2E2E;
+    --mostaza:#F0C31A; --mostaza-dim:#9F8121; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --azul:#79b0e6; --cobre:#d99c6e; --verde:#7ec77b; --rojo:#e0533d; --linea:#3A3A36;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
@@ -99,6 +99,7 @@
 
   footer.brand{margin-top:22px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
 </style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
 </head>
 <body>
 <div class="wrap">
@@ -146,7 +147,7 @@
     <div class="box ficha" id="ficha"></div>
   </section>
 
-  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+  <footer class="brand">AMURAI · Taller Sistema de Precios</footer>
 </div>
 
 <script>
@@ -185,9 +186,9 @@ function sectorPath(cx,cy,r1,r2,a0,a1){
        + `L${x3.toFixed(2)},${y3.toFixed(2)} A${r1},${r1} 0 ${large} 0 ${x4.toFixed(2)},${y4.toFixed(2)} Z`;
 }
 function segFill(i){
-  if(model[i].refuerzo) return '#E8C223';
+  if(model[i].refuerzo) return '#F0C31A';
   if((model[i].hoy||'').trim() || (model[i].valor||'').trim()) return '#3a3528';
-  return '#1f1f1f';
+  return '#2E2E2E';
 }
 function renderRosco(){
   const S=380, cx=S/2, cy=S/2, r1=68, r2=150, gap=0.035;
@@ -197,10 +198,10 @@ function renderRosco(){
     const a0=start+i*step+gap, a1=start+(i+1)*step-gap, am=(a0+a1)/2;
     const isSel=i===sel;
     s+='<path class="seg" data-i="'+i+'" d="'+sectorPath(cx,cy,r1,r2,a0,a1)+'" '
-      +'fill="'+segFill(i)+'" stroke="'+(isSel?'#f4f1e9':'#2a2a26')+'" stroke-width="'+(isSel?2.5:1)+'"/>';
+      +'fill="'+segFill(i)+'" stroke="'+(isSel?'#f4f1e9':'#3A3A36')+'" stroke-width="'+(isSel?2.5:1)+'"/>';
     // número en el centroide del segmento
     const [nx,ny]=polar(cx,cy,(r1+r2)/2,am);
-    const numColor = model[i].refuerzo ? '#000' : (isSel?'#f4f1e9':'#bdb9ad');
+    const numColor = model[i].refuerzo ? '#191919' : (isSel?'#f4f1e9':'#bdb9ad');
     s+='<text class="seg-num" x="'+nx.toFixed(1)+'" y="'+(ny+5).toFixed(1)+'" text-anchor="middle" fill="'+numColor+'">'+QUESITOS[i].n+'</text>';
     // etiqueta fuera del anillo
     const [lx,ly]=polar(cx,cy,r2+20,am);
@@ -218,7 +219,7 @@ function renderRosco(){
   }
   // centro
   const refCount = model.filter(m=>m.refuerzo).length;
-  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r1-6)+'" fill="#0d0d0d" stroke="#2a2a26" stroke-width="1"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r1-6)+'" fill="#1F1F1F" stroke="#3A3A36" stroke-width="1"/>';
   s+='<text class="center-t" x="'+cx+'" y="'+(cy-12)+'">REFUERZO</text>';
   s+='<text class="center-n" x="'+cx+'" y="'+(cy+18)+'">'+refCount+'/6</text>';
   s+='</svg>';

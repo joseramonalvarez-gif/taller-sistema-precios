@@ -5,13 +5,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de escalera de precios · Paso 4</title>
-<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
 <style>
   :root{
-    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
-    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
-    --rojo:#e0533d; --naranja:#f0a93f; --verde:#7ec77b; --azul:#79b0e6; --linea:#2a2a26;
-    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --negro:#191919; --negro-2:#1F1F1F; --carbon:#262626; --carbon-2:#2E2E2E;
+    --mostaza:#F0C31A; --mostaza-dim:#9F8121; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --rojo:#e0533d; --naranja:#f0a93f; --verde:#7ec77b; --azul:#79b0e6; --linea:#3A3A36;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
@@ -69,7 +69,7 @@
   tbody td{padding:9px 8px;text-align:right;font-family:var(--mono);border-bottom:1px solid var(--negro-2)}
   tbody td:first-child{text-align:left;font-family:var(--sans);color:var(--blanco);font-weight:500}
   tbody td.num{font-weight:600}
-  tbody tr.optimo{background:rgba(232,194,35,.10)}
+  tbody tr.optimo{background:rgba(240,195,26,.10)}
   tbody tr.optimo td{color:var(--mostaza)}
   tbody tr.optimo td:first-child{color:var(--mostaza);font-weight:700}
   tbody tr.perdida td{color:var(--rojo)}
@@ -87,6 +87,7 @@
 
   footer.brand{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
 </style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
 </head>
 <body>
 <div class="wrap">
@@ -149,7 +150,7 @@
     <div class="msg empty" id="msg">Carga el ejemplo de torreznos o mete tus números para construir la escalera.</div>
   </section>
 
-  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+  <footer class="brand">AMURAI · Taller Sistema de Precios</footer>
 </div>
 
 <script>
@@ -272,20 +273,20 @@ function drawChart(rows,iOptimo,iSalida){
   const ptsC=rows.map(r=>x(r.i)+','+yC(r.contrib||0)).join(' ');
   let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
   // base
-  s+='<line x1="'+padL+'" y1="'+(H-padB)+'" x2="'+(W-padR)+'" y2="'+(H-padB)+'" stroke="#2a2a26" stroke-width="1"/>';
+  s+='<line x1="'+padL+'" y1="'+(H-padB)+'" x2="'+(W-padR)+'" y2="'+(H-padB)+'" stroke="#3A3A36" stroke-width="1"/>';
   // salida (discreta)
-  if(iSalida>=0&&iSalida<n){ s+='<line x1="'+x(iSalida)+'" y1="'+padT+'" x2="'+x(iSalida)+'" y2="'+(H-padB)+'" stroke="#9a812a" stroke-width="1" stroke-dasharray="3 4"/>'; }
+  if(iSalida>=0&&iSalida<n){ s+='<line x1="'+x(iSalida)+'" y1="'+padT+'" x2="'+x(iSalida)+'" y2="'+(H-padB)+'" stroke="#9F8121" stroke-width="1" stroke-dasharray="3 4"/>'; }
   // óptimo (mostaza)
-  if(iOptimo>=0){ s+='<line x1="'+x(iOptimo)+'" y1="'+padT+'" x2="'+x(iOptimo)+'" y2="'+(H-padB)+'" stroke="#E8C223" stroke-width="1.5"/>'; }
+  if(iOptimo>=0){ s+='<line x1="'+x(iOptimo)+'" y1="'+padT+'" x2="'+x(iOptimo)+'" y2="'+(H-padB)+'" stroke="#F0C31A" stroke-width="1.5"/>'; }
   // curvas
   s+='<polyline fill="none" stroke="#5b9bd5" stroke-width="2.5" points="'+ptsV+'"/>';
-  s+='<polyline fill="none" stroke="#E8C223" stroke-width="3" points="'+ptsC+'"/>';
+  s+='<polyline fill="none" stroke="#F0C31A" stroke-width="3" points="'+ptsC+'"/>';
   // puntos beneficio + dot óptimo
-  rows.forEach(r=>{ s+='<circle cx="'+x(r.i)+'" cy="'+yC(r.contrib||0)+'" r="'+(r.i===iOptimo?5:2.5)+'" fill="'+(r.i===iOptimo?'#E8C223':'#9a812a')+'"/>'; });
+  rows.forEach(r=>{ s+='<circle cx="'+x(r.i)+'" cy="'+yC(r.contrib||0)+'" r="'+(r.i===iOptimo?5:2.5)+'" fill="'+(r.i===iOptimo?'#F0C31A':'#9F8121')+'"/>'; });
   // etiquetas precio en X
-  rows.forEach(r=>{ s+='<text x="'+x(r.i)+'" y="'+(H-padB+17)+'" fill="#d8d4c8" font-family="JetBrains Mono,monospace" font-size="12" font-weight="500" text-anchor="middle">'+eur0.format(r.precio)+'€</text>'; });
+  rows.forEach(r=>{ s+='<text x="'+x(r.i)+'" y="'+(H-padB+17)+'" fill="#d8d4c8" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="500" text-anchor="middle">'+eur0.format(r.precio)+'€</text>'; });
   // etiqueta óptimo
-  if(iOptimo>=0){ s+='<text x="'+x(iOptimo)+'" y="'+(padT-2)+'" fill="#E8C223" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" text-anchor="middle">ÓPTIMO</text>'; }
+  if(iOptimo>=0){ s+='<text x="'+x(iOptimo)+'" y="'+(padT-2)+'" fill="#F0C31A" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle">ÓPTIMO</text>'; }
   s+='</svg>';
   wrap.innerHTML=s;
 }

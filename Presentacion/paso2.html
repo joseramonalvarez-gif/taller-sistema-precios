@@ -5,15 +5,15 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paso 2 — Tu posicionamiento define tu precio · slides (contenido)</title>
-<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
 <!-- Contenido del Paso 2 SIN header/footer/chrome. El chrome lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
 <!-- TEXTO DE PANTALLA (capa profesional). El guion fino hablado lo pone Antonio. Posicionamiento + CUPRA = del original (masterclass maquetada). Curva de valor = ampliación nueva (Antonio introduce, JR operativiza). -->
 <style>
   :root{
-    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
-    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --Y:#F0C31A; --K:#191919; --W:#fff; --GR:rgba(255,255,255,.78);
+    --BG:#191919; --C1:#1F1F1F; --C2:#2E2E2E; --C3:#383838; --C4:#454545;
     --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b; --azul:#5b9bd5; --cobre:#c9885b;
-    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;overflow:hidden}
@@ -21,7 +21,7 @@
 
   .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
   .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
-    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+    background:rgba(25,25,25,.9);border-top:1px solid var(--C2);z-index:30}
   .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
   .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
   .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
@@ -49,7 +49,7 @@
   .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
   .frag.on{opacity:1;transform:none}
 
-  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.32);padding:18px 22px}
+  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(25,25,25,.32);padding:18px 22px}
 
   /* Eje de posicionamiento (3 posiciones) */
   .eje{display:flex;justify-content:space-between;width:min(80vw,720px);margin-top:18px}
@@ -69,7 +69,7 @@
 
   /* Tres opciones de posicionamiento (reflexión) */
   .tres{display:flex;gap:clamp(12px,2vw,22px);flex-wrap:wrap;justify-content:center;margin-top:6px}
-  .op{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(14px,1.8vw,22px) clamp(18px,2.2vw,28px);width:min(28vw,210px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .op{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:clamp(14px,1.8vw,22px) clamp(18px,2.2vw,28px);width:min(28vw,210px);box-shadow:0 2px 12px rgba(25,25,25,.32)}
   .op h3{font-family:var(--sans);font-weight:700;font-size:clamp(14px,1.7vw,21px);color:var(--Y);margin-bottom:5px}
   .op p{font-family:var(--serif);font-size:clamp(14px,1.45vw,17px);color:var(--GR);line-height:1.4}
 
@@ -90,10 +90,10 @@
   /* Las 4 acciones (RICE) */
   .rice2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px);width:min(92vw,780px);margin-top:6px}
   @media(max-width:640px){.rice2{grid-template-columns:1fr}}
-  .qd{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:18px 20px;text-align:left;box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .qd{background:var(--C2);border:1px solid var(--C3);border-radius:12px;padding:18px 20px;text-align:left;box-shadow:0 2px 12px rgba(25,25,25,.32)}
   .qd .h{font-family:var(--sans);font-weight:800;font-size:clamp(13px,1.7vw,20px);letter-spacing:.02em;margin-bottom:8px}
   .qd.menos{border-color:var(--azul)} .qd.menos .h{color:var(--azul)}
-  .qd.mas{border-color:var(--Y);box-shadow:0 4px 20px rgba(232,194,35,.12)} .qd.mas .h{color:var(--Y)}
+  .qd.mas{border-color:var(--Y);box-shadow:0 4px 20px rgba(240,195,26,.12)} .qd.mas .h{color:var(--Y)}
   .qd p{font-family:var(--serif);font-size:clamp(15px,1.6vw,20px);color:var(--GR);line-height:1.45}
   .qd p b{color:var(--W);font-weight:600}
 
@@ -106,13 +106,13 @@
   .inv .col .s{font-family:var(--serif);font-size:clamp(13px,1.35vw,16px);color:var(--GR);margin-top:2px}
 
   /* Mostaza-dim para bordes sutiles */
-  :root{--mostaza-dim:#9a812a}
+  :root{--mostaza-dim:#9F8121}
 
   /* Rejilla ERRC (caso trabajado) */
   .errc-h{display:flex;justify-content:space-between;width:min(92vw,740px);margin:0 auto 6px;font-family:var(--sans);font-weight:700;font-size:clamp(10px,1.15vw,14px)}
   .errc-h .c{color:var(--azul)} .errc-h .v{color:var(--Y)}
   .errc{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px,1.3vw,15px);width:min(92vw,740px);margin-top:2px;text-align:left}
-  .eq{border-radius:12px;padding:clamp(10px,1.3vw,15px) clamp(13px,1.6vw,18px);background:var(--C2);border:1px solid var(--C3);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  .eq{border-radius:12px;padding:clamp(10px,1.3vw,15px) clamp(13px,1.6vw,18px);background:var(--C2);border:1px solid var(--C3);box-shadow:0 2px 12px rgba(25,25,25,.32)}
   .eq .h{font-family:var(--sans);font-weight:800;font-size:clamp(11px,1.35vw,16px);letter-spacing:.03em;margin-bottom:4px}
   .eq p{font-family:var(--serif);font-size:clamp(14px,1.4vw,18px);color:var(--GR);line-height:1.32}
   .eq p b{color:var(--W);font-weight:600}
@@ -134,6 +134,7 @@
   .slide.tool{padding:6px 10px}
   .slide.tool iframe{width:min(1700px,98.5vw);height:100%;border:0;border-radius:10px;background:var(--BG)}
 </style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
 </head>
 <body>
 <div class="deck" id="deck">
@@ -226,17 +227,17 @@
     <div class="kicker">La curva de valor · cómo se lee</div>
     <div class="sketch frag">
       <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
-        <line x1="40" y1="30" x2="40" y2="200" stroke="#222" stroke-width="1"/>
-        <line x1="40" y1="200" x2="540" y2="200" stroke="#222" stroke-width="1"/>
-        <text x="20" y="38" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">5</text>
-        <text x="20" y="203" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">1</text>
-        <text x="40" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Precio</text>
-        <text x="165" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Asesor.</text>
-        <text x="290" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Plazo</text>
-        <text x="415" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Postventa</text>
-        <text x="525" y="225" fill="#bcc0c6" font-family="Manrope" font-size="10" text-anchor="middle">Garantía</text>
+        <line x1="40" y1="30" x2="40" y2="200" stroke="#383838" stroke-width="1"/>
+        <line x1="40" y1="200" x2="540" y2="200" stroke="#383838" stroke-width="1"/>
+        <text x="20" y="38" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">5</text>
+        <text x="20" y="203" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">1</text>
+        <text x="40" y="225" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">Precio</text>
+        <text x="165" y="225" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">Asesor.</text>
+        <text x="290" y="225" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">Plazo</text>
+        <text x="415" y="225" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">Postventa</text>
+        <text x="525" y="225" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="10" text-anchor="middle">Garantía</text>
         <polyline fill="none" stroke="#5b9bd5" stroke-width="2.5" points="40,180 165,180 290,70 415,180 525,150"/>
-        <polyline fill="none" stroke="#E8C223" stroke-width="3.2" points="40,110 165,45 290,90 415,45 525,55"/>
+        <polyline fill="none" stroke="#F0C31A" stroke-width="3.2" points="40,110 165,45 290,90 415,45 525,55"/>
       </svg>
     </div>
     <div class="regla frag" style="margin-top:14px;font-size:clamp(16px,2.1vw,26px)">Más alto = más inversión = <span class="em">más valor</span> (también el precio).</div>
@@ -301,15 +302,15 @@
     </div>
     <div class="mini frag">
       <svg viewBox="0 0 440 130" xmlns="http://www.w3.org/2000/svg">
-        <line x1="30" y1="12" x2="30" y2="100" stroke="#222" stroke-width="1"/>
-        <line x1="30" y1="100" x2="410" y2="100" stroke="#222" stroke-width="1"/>
+        <line x1="30" y1="12" x2="30" y2="100" stroke="#383838" stroke-width="1"/>
+        <line x1="30" y1="100" x2="410" y2="100" stroke="#383838" stroke-width="1"/>
         <polyline fill="none" stroke="#5b9bd5" stroke-width="2" points="30,56 125,34 220,78 315,78 410,78"/>
-        <polyline fill="none" stroke="#E8C223" stroke-width="2.8" points="30,78 125,78 220,12 315,12 410,12"/>
-        <text x="30" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Precio</text>
-        <text x="125" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Cercanía</text>
-        <text x="220" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Experiencia</text>
-        <text x="315" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Variedad</text>
-        <text x="410" y="113" fill="#bcc0c6" font-family="Manrope" font-size="8" text-anchor="middle">Escala</text>
+        <polyline fill="none" stroke="#F0C31A" stroke-width="2.8" points="30,78 125,78 220,12 315,12 410,12"/>
+        <text x="30" y="113" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="8" text-anchor="middle">Precio</text>
+        <text x="125" y="113" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="8" text-anchor="middle">Cercanía</text>
+        <text x="220" y="113" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="8" text-anchor="middle">Experiencia</text>
+        <text x="315" y="113" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="8" text-anchor="middle">Variedad</text>
+        <text x="410" y="113" fill="#bcc0c6" font-family="Inter,system-ui,sans-serif" font-size="8" text-anchor="middle">Escala</text>
       </svg>
     </div>
     <div class="nota frag" style="margin-top:8px;font-size:clamp(12px,1.45vw,18px)"><span style="color:#5b9bd5">Cine tradicional</span> vs <span style="color:var(--Y)">Kinepolis</span>: misma industria, curva distinta — más valor y menos coste por espectador a la vez.</div>

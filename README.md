@@ -1,7 +1,7 @@
-# Sistema de Precios — Taller Nevada & Amurai
+# Sistema de Precios — Taller AMURAI
 
 Material para los asistentes del taller **Sistema de Precios**, impartido por
-Nevada & Amurai en la Cámara de Comercio de Granada.
+AMURAI en la Cámara de Comercio de Granada.
 
 **Acceso:** https://joseramonalvarez-gif.github.io/taller-sistema-precios/
 
@@ -25,4 +25,4 @@ Nevada & Amurai en la Cámara de Comercio de Granada.
 
 ---
 
-© Nevada & Amurai. Material de uso para los asistentes del taller.
+© AMURAI. Material de uso para los asistentes del taller.

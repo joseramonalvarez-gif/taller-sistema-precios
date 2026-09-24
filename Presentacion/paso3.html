@@ -5,14 +5,14 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paso 3 — Precios rentables · slides (contenido)</title>
-<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
 <!-- Contenido del Paso 3 SIN header/footer/chrome. El chrome (logo, navegación, contador) lo aporta el HTML contenedor (Paso 6) al integrar. Navegación local solo por teclado para pruebas: ← → / barra / F=fullscreen. -->
 <style>
   :root{
-    --Y:#E8C223; --K:#000; --W:#fff; --GR:#bcc0c6;
-    --BG:#080808; --C1:#0F0F0F; --C2:#181818; --C3:#222; --C4:#2D2D2D;
+    --Y:#F0C31A; --K:#191919; --W:#fff; --GR:rgba(255,255,255,.78);
+    --BG:#191919; --C1:#1F1F1F; --C2:#2E2E2E; --C3:#383838; --C4:#454545;
     --rojo:#e0533d; --naranja:#e8972c; --verde:#6db86b;
-    --serif:'Sarabun',Georgia,serif; --sans:'Manrope',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;overflow:hidden}
@@ -21,7 +21,7 @@
   .deck{position:fixed;top:0;left:0;right:0;bottom:50px}
   /* navegación mínima (se quita al integrar en el Paso 6) */
   .nav{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:center;gap:18px;
-    background:rgba(8,8,8,.9);border-top:1px solid var(--C2);z-index:30}
+    background:rgba(25,25,25,.9);border-top:1px solid var(--C2);z-index:30}
   .nav button{background:none;border:1px solid var(--Y);color:var(--Y);font-family:var(--sans);font-size:13px;letter-spacing:.1em;padding:7px 18px;border-radius:5px;cursor:pointer}
   .nav button:disabled{border-color:var(--C3);color:var(--C3);cursor:default}
   .nav .count{font-family:var(--mono);font-size:12px;color:var(--GR);min-width:70px;text-align:center}
@@ -43,9 +43,9 @@
     display:flex;flex-direction:column;align-items:center;gap:6px;
     background:rgba(12,12,12,.74);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
     border:2px solid var(--Y);border-radius:18px;padding:clamp(14px,1.7vw,22px) clamp(22px,2.8vw,38px);
-    font-family:var(--sans);cursor:pointer;user-select:none;box-shadow:0 6px 30px rgba(0,0,0,.55);transition:box-shadow .2s,transform .15s}
+    font-family:var(--sans);cursor:pointer;user-select:none;box-shadow:0 6px 30px rgba(25,25,25,.55);transition:box-shadow .2s,transform .15s}
   .aula-timer:hover{transform:translateY(-1px)}
-  .aula-timer.running{box-shadow:0 0 40px rgba(232,194,35,.32)}
+  .aula-timer.running{box-shadow:0 0 40px rgba(240,195,26,.32)}
   .aula-timer .at-time{font-size:clamp(42px,5.4vw,66px);font-weight:700;color:var(--Y);font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:1}
   .aula-timer .at-label{font-size:clamp(9px,1vw,11px);letter-spacing:.16em;text-transform:uppercase;color:#cfcfcf;font-weight:600;display:flex;align-items:center;gap:7px}
   .aula-timer .at-ico{color:var(--Y);font-size:1.05em}
@@ -59,14 +59,14 @@
   .frag{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
   .frag.on{opacity:1;transform:none}
 
-  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.32);padding:18px 22px}
-  .card.hot{border-color:var(--Y);box-shadow:0 0 50px rgba(232,194,35,.12)}
+  .card{background:var(--C2);border:1px solid var(--C3);border-radius:12px;box-shadow:0 2px 12px rgba(25,25,25,.32);padding:18px 22px}
+  .card.hot{border-color:var(--Y);box-shadow:0 0 50px rgba(240,195,26,.12)}
 
   .tres{display:flex;gap:clamp(18px,4vw,64px);align-items:baseline;flex-wrap:wrap;justify-content:center}
   .tres span{font-family:var(--serif);font-size:clamp(24px,3.6vw,48px);color:var(--GR)}
   .tres .valor{color:var(--Y);font-weight:600;font-size:clamp(32px,5vw,68px)}
 
-  table{border-collapse:collapse;font-size:clamp(16px,1.9vw,24px);margin:0 auto;background:var(--C1);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.32)}
+  table{border-collapse:collapse;font-size:clamp(16px,1.9vw,24px);margin:0 auto;background:var(--C1);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(25,25,25,.32)}
   caption{font-family:var(--sans);font-size:clamp(10px,1.1vw,13px);letter-spacing:.18em;text-transform:uppercase;color:var(--Y);margin-bottom:16px}
   td,th{padding:.55em 1.1em;border-bottom:1px solid var(--C3);text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
   tr:last-child td{border-bottom:none}
@@ -78,7 +78,7 @@
   .cmp td.c2{color:var(--W)} .cmp td.up{color:var(--verde)} .cmp td.down{color:var(--rojo)}
 
   .casc{display:inline-grid;grid-template-columns:auto auto;gap:.35em 1.6em;font-family:var(--mono);font-size:clamp(17px,2.4vw,32px);text-align:left;
-    background:var(--C1);border:1px solid var(--C3);border-radius:14px;padding:clamp(18px,2.4vw,30px) clamp(22px,3vw,40px);box-shadow:0 2px 12px rgba(0,0,0,.32)}
+    background:var(--C1);border:1px solid var(--C3);border-radius:14px;padding:clamp(18px,2.4vw,30px) clamp(22px,3vw,40px);box-shadow:0 2px 12px rgba(25,25,25,.32)}
   .casc .r{text-align:right;font-variant-numeric:tabular-nums}
   .casc .mc{color:var(--Y);font-weight:700}
   .rule{height:2px;background:linear-gradient(90deg,transparent,var(--Y),transparent);grid-column:1/3;margin:.25em 0}
@@ -87,7 +87,7 @@
   .bal-arm{transition:transform 1.1s cubic-bezier(.5,.05,.2,1);transform-origin:410px 130px}
   .leyenda{display:flex;gap:clamp(14px,2.4vw,30px);justify-content:center;margin-top:14px;font-family:var(--sans);font-size:clamp(14px,1.5vw,17px);color:var(--GR);flex-wrap:wrap}
   .leyenda span{display:inline-flex;align-items:center;gap:7px}
-  .leyenda i{width:14px;height:14px;border-radius:50%;border:1px solid #000;display:inline-block}
+  .leyenda i{width:14px;height:14px;border-radius:50%;border:1px solid #191919;display:inline-block}
   .escdata{display:flex;gap:clamp(16px,3vw,40px);margin-top:18px;font-family:var(--mono);font-size:clamp(15px,1.7vw,22px);flex-wrap:wrap;justify-content:center}
   .escdata b{font-weight:700}
   .estado{margin-top:14px;font-family:var(--sans);font-weight:700;font-size:clamp(16px,2.2vw,30px);letter-spacing:.04em}
@@ -108,6 +108,7 @@
   .slide.calc{padding:6px 10px}
   .slide.calc iframe{width:min(1340px,98vw);height:100%;border:0;border-radius:10px;background:var(--BG)}
 </style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
 </head>
 <body>
 <div class="deck" id="deck">
@@ -170,13 +171,13 @@
           <g>
             <line x1="180" y1="130" x2="180" y2="196" stroke="var(--C4)" stroke-width="4"/>
             <path d="M120,196 a60,20 0 0,0 120,0" fill="none" stroke="var(--W)" stroke-width="4"/>
-            <text x="180" y="232" fill="var(--Y)" font-family="Manrope" font-weight="700" font-size="20" text-anchor="middle">VENTAS</text>
+            <text x="180" y="232" fill="var(--Y)" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="20" text-anchor="middle">VENTAS</text>
             <g id="coinsV"></g>
           </g>
           <g>
             <line x1="640" y1="130" x2="640" y2="196" stroke="var(--C4)" stroke-width="4"/>
             <path d="M580,196 a60,20 0 0,0 120,0" fill="none" stroke="var(--W)" stroke-width="4"/>
-            <text x="640" y="232" fill="var(--W)" font-family="Manrope" font-weight="700" font-size="20" text-anchor="middle">COSTES</text>
+            <text x="640" y="232" fill="var(--W)" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="20" text-anchor="middle">COSTES</text>
             <g id="coinsC"></g>
           </g>
         </g>
@@ -369,7 +370,7 @@
 const slides=[...document.querySelectorAll('.slide')];
 let si=0;
 
-const COL_V='#E8C223', COL_CV='#c47a3d', COL_CF='#5b6675';
+const COL_V='#F0C31A', COL_CV='#c47a3d', COL_CF='#5b6675';
 const ESC=[
   {v:20000,cv:12000,cf:12000, rot:9,  cls:'perdida',   txt:'Pérdida'},
   {v:30000,cv:18000,cf:12000, rot:0,  cls:'equilibrio',txt:'Punto muerto: ni ganas ni pierdes'},
@@ -384,7 +385,7 @@ function drawStack(gid,colors,cx){
     const row=Math.floor(idx/per), col=idx%per, inRow=Math.min(per,n-row*per);
     const x=cx-(inRow-1)*(2*r+gap)/2 + col*(2*r+gap);
     const y=188-row*(2*r-3);
-    g.innerHTML+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${color}" stroke="#000" stroke-width="1.5"/>`;
+    g.innerHTML+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${color}" stroke="#191919" stroke-width="1.5"/>`;
   });
 }
 function setEsc(i){

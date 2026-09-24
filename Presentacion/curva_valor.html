@@ -5,13 +5,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curva de valor · Paso 2</title>
-<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
 <style>
   :root{
-    --negro:#000000; --negro-2:#0d0d0d; --carbon:#161616; --carbon-2:#1f1f1f;
-    --mostaza:#E8C223; --mostaza-dim:#9a812a; --blanco:#f4f1e9; --gris:#bdb9ad;
-    --azul:#79b0e6; --cobre:#d99c6e; --verde:#6db86b; --rojo:#e0533d; --linea:#2a2a26;
-    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --negro:#191919; --negro-2:#1F1F1F; --carbon:#262626; --carbon-2:#2E2E2E;
+    --mostaza:#F0C31A; --mostaza-dim:#9F8121; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --azul:#79b0e6; --cobre:#d99c6e; --verde:#6db86b; --rojo:#e0533d; --linea:#3A3A36;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
@@ -106,7 +106,7 @@
   .ecard.elim,.ecard.red{border-color:#33597a} .ecard.elim .eh,.ecard.red .eh{color:var(--azul)}
   .ecard.elim .tag,.ecard.red .tag{background:rgba(91,155,213,.16);color:var(--azul)}
   .ecard.elev,.ecard.crea{border-color:var(--mostaza-dim)} .ecard.elev .eh,.ecard.crea .eh{color:var(--mostaza)}
-  .ecard.elev .tag,.ecard.crea .tag{background:rgba(232,194,35,.14);color:var(--mostaza)}
+  .ecard.elev .tag,.ecard.crea .tag{background:rgba(240,195,26,.14);color:var(--mostaza)}
   .ecard textarea{width:100%;resize:vertical;min-height:54px;background:transparent;border:0;color:var(--blanco);
     font-family:var(--sans);font-weight:500;font-size:14.5px;line-height:1.5;padding:0}
   .ecard textarea:focus{outline:none}
@@ -114,6 +114,7 @@
 
   footer.brand{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
 </style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
 </head>
 <body>
 <div class="wrap">
@@ -171,12 +172,12 @@
    </div>
   </section>
 
-  <footer class="brand">Nevada &amp; Amurai · Taller Sistema de Precios</footer>
+  <footer class="brand">AMURAI · Taller Sistema de Precios</footer>
 </div>
 
 <script>
 const SERIES=[
-  {key:'tu',  label:'Tú',                  color:'#E8C223', w:3.2, cls:'tu'},
+  {key:'tu',  label:'Tú',                  color:'#F0C31A', w:3.2, cls:'tu'},
   {key:'low', label:'Competidor low cost', color:'#79b0e6', w:2.6, cls:'low'},
   {key:'prem',label:'Competidor premium',  color:'#d99c6e', w:2.6, cls:'prem'}
 ];
@@ -260,13 +261,13 @@ function drawChart(){
   const y=v=> padT + (H-padT-padB)*(1-(v-1)/4);
   let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
   for(let lvl=1;lvl<=5;lvl++){
-    s+='<line x1="'+padL+'" y1="'+y(lvl)+'" x2="'+(W-padR)+'" y2="'+y(lvl)+'" stroke="#1f1f1f" stroke-width="1"/>';
-    s+='<text x="'+(padL-8)+'" y="'+(y(lvl)+3)+'" fill="#bdb9ad" font-family="JetBrains Mono,monospace" font-size="11" text-anchor="end">'+lvl+'</text>';
+    s+='<line x1="'+padL+'" y1="'+y(lvl)+'" x2="'+(W-padR)+'" y2="'+y(lvl)+'" stroke="#2E2E2E" stroke-width="1"/>';
+    s+='<text x="'+(padL-8)+'" y="'+(y(lvl)+3)+'" fill="#bdb9ad" font-family="Inter,system-ui,sans-serif" font-size="11" text-anchor="end">'+lvl+'</text>';
   }
   VARS.forEach((vn,i)=>{
-    s+='<line x1="'+x(i)+'" y1="'+padT+'" x2="'+x(i)+'" y2="'+(H-padB)+'" stroke="#1f1f1f" stroke-width="1"/>';
+    s+='<line x1="'+x(i)+'" y1="'+padT+'" x2="'+x(i)+'" y2="'+(H-padB)+'" stroke="#2E2E2E" stroke-width="1"/>';
     const lbl=trunc(vn,14)||('Var '+(i+1));
-    s+='<text x="'+x(i)+'" y="'+(H-padB+18)+'" fill="#d8d4c8" font-family="Manrope,sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">'+lbl+'</text>';
+    s+='<text x="'+x(i)+'" y="'+(H-padB+18)+'" fill="#d8d4c8" font-family="Inter,system-ui,sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">'+lbl+'</text>';
   });
   // competidores primero, tú encima
   [SERIES[1],SERIES[2],SERIES[0]].forEach(se=>{
