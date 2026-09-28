@@ -8,11 +8,12 @@ AMURAI en la Cámara de Comercio de Granada.
 ## Contenido
 
 - **La presentación completa** del taller (los 6 pasos).
-- **Cuatro herramientas interactivas**, también utilizables por separado:
+- **Cinco herramientas interactivas**, también utilizables por separado:
   - Curva de valor (Paso 2)
   - Margen y punto de equilibrio (Paso 3)
   - Escalera de precios (Paso 4)
   - Mapa del proceso de venta (Paso 5)
+  - Matriz de sesgos y ángulos (Paso 6)
 
 ## Notas de uso
 

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de sesgos y ángulos · Paso 6</title>
+<link rel="stylesheet" href="../vendor/fonts-amurai.css">
+<style>
+  :root{
+    --negro:#191919; --negro-2:#1F1F1F; --carbon:#262626; --carbon-2:#2E2E2E;
+    --mostaza:#F0C31A; --mostaza-dim:#9F8121; --blanco:#f4f1e9; --gris:#bdb9ad;
+    --rojo:#e0533d; --naranja:#f0a93f; --verde:#7ec77b; --linea:#3A3A36;
+    --serif:'Inter',system-ui,Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif; --mono:'Inter',system-ui,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--negro);color:var(--blanco);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh}
+  .wrap{max-width:1500px;margin:0 auto}
+
+  header.top{margin-bottom:14px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3vw,32px);line-height:1.05;letter-spacing:-.01em}
+  h1 .em{color:var(--mostaza)}
+  .lead{margin-top:8px;font-size:15.5px;line-height:1.5;color:var(--gris);max-width:92ch;margin-left:auto;margin-right:auto}
+
+  /* Controles */
+  .ctrl{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0 14px}
+  .ctrl .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+  .chip{font-size:13px;font-weight:600;background:transparent;color:var(--blanco);border:1px solid var(--mostaza-dim);padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+  .chip:hover{background:var(--mostaza);color:var(--negro);border-color:var(--mostaza)}
+  .chip.on{background:var(--mostaza);color:var(--negro);border-color:var(--mostaza)}
+  .chip.ghost{border-color:var(--linea);color:var(--gris)}
+  .guia{display:none;background:rgba(240,195,26,0.07);border:1px solid rgba(240,195,26,0.25);border-radius:10px;padding:10px 16px;margin:0 auto 14px;max-width:1100px;font-family:var(--mono);font-size:12.5px;color:var(--gris)}
+  .guia.on{display:block}
+  .guia .pasos{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+  .guia b{color:var(--mostaza);font-weight:700;margin-right:5px}
+  .guia .activo{margin-top:7px;text-align:center;font-family:var(--sans);font-size:14px;color:var(--blanco)}
+  .guia .activo strong{color:var(--mostaza)}
+
+  .panel{background:var(--carbon);border:1px solid var(--linea);border-radius:16px;padding:clamp(14px,2vw,22px)}
+
+  /* Matriz */
+  .mtx{overflow:auto}
+  table.m{border-collapse:separate;border-spacing:7px;width:100%;min-width:760px}
+  table.m th{padding:0;vertical-align:bottom}
+  table.m th.corner{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gris);text-align:left;padding:6px 10px;font-weight:500;min-width:190px}
+  .mh{background:var(--negro-2);border:1px solid rgba(240,195,26,0.22);border-radius:10px;padding:10px 8px;text-align:center;min-width:120px}
+  .mh .ab{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--mostaza);letter-spacing:.08em;margin-bottom:4px}
+  .mh .nm{font-size:12.5px;color:var(--blanco);font-weight:600;line-height:1.3}
+  .sg{background:var(--carbon-2);border:1px solid var(--linea);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:all .18s;min-height:56px}
+  .sg .id{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mostaza);font-weight:700;margin-bottom:2px}
+  .sg .nm{font-size:14px;font-weight:600;color:var(--blanco);white-space:nowrap}
+  .sg .ok{color:var(--mostaza);font-weight:700;font-size:16px;display:none}
+  .sg.done .ok{display:inline}
+  body.quiz .sg{cursor:pointer;border-color:var(--mostaza-dim)}
+  body.quiz .sg.sel{background:var(--mostaza);border-color:var(--mostaza)}
+  body.quiz .sg.sel .id,body.quiz .sg.sel .nm,body.quiz .sg.sel .ok{color:var(--negro)}
+  .cell{min-width:90px;height:52px;border-radius:10px;border:1px solid var(--linea);background:var(--negro-2);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;font-family:var(--mono)}
+  .cell.conn{border-color:rgba(240,195,26,0.35);cursor:pointer}
+  .cell.conn:hover{background:rgba(240,195,26,0.12)}
+  .cell .dot{width:18px;height:18px;border-radius:50%;background:var(--mostaza)}
+  .cell.hidden-q{border-color:rgba(240,195,26,0.2);cursor:pointer}
+  .cell.hidden-q .q{font-size:16px;font-weight:700;color:rgba(240,195,26,0.55)}
+  .cell.hidden-q:hover{background:rgba(240,195,26,0.08)}
+  .cell.flash{animation:flashCell .55s ease both}
+  @keyframes flashCell{0%{background:var(--negro-2)}45%{background:rgba(240,195,26,.5)}100%{background:rgba(240,195,26,.2)}}
+
+  .info{margin-top:10px;background:var(--carbon-2);border:1px solid var(--linea);border-radius:10px;padding:11px 16px;font-size:14.5px;line-height:1.55;color:var(--gris);display:flex;gap:10px;align-items:flex-start;min-height:52px}
+  .info.on{border-color:rgba(240,195,26,0.4);color:var(--blanco)}
+  .info .i{color:var(--mostaza);font-weight:700;font-family:var(--mono);flex:0 0 auto}
+  .info small{color:var(--gris);margin-left:8px;font-size:12px}
+  .leg{display:flex;gap:20px;margin-top:8px;font-family:var(--mono);font-size:12px;color:var(--gris);align-items:center;flex-wrap:wrap}
+  .leg .d{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--mostaza);margin-right:5px;vertical-align:-1px}
+  .leg .q{color:rgba(240,195,26,0.6);font-weight:700;margin-right:4px}
+  .leg .cnt{margin-left:auto}
+
+  /* Detalle + tarea (16:9: dos columnas) */
+  .lower{display:block;margin-top:18px}
+  @media(min-width:1040px){.lower{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}}
+  .sec-t{font-family:var(--serif);font-weight:600;font-size:clamp(17px,2vw,22px);color:var(--blanco);margin-bottom:4px}
+  .sec-s{font-size:13.5px;color:var(--gris);margin-bottom:12px}
+  details{background:var(--negro-2);border:1px solid var(--linea);border-radius:12px;margin-bottom:8px;overflow:hidden}
+  details[open]{border-color:var(--mostaza-dim)}
+  summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;align-items:center;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mostaza);font-weight:700;min-width:28px}
+  summary .t{font-weight:700;font-size:15px;color:var(--blanco)}
+  summary .g{font-size:13px;color:var(--gris);margin-left:auto;text-align:right}
+  summary .arr{color:var(--mostaza-dim);transition:transform .2s;margin-left:6px}
+  details[open] summary .arr{transform:rotate(180deg)}
+  .dbody{padding:2px 16px 14px;border-top:1px solid var(--carbon)}
+  .dbody h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza);margin:12px 0 5px}
+  .dbody p{font-size:14px;line-height:1.6;color:var(--gris);margin:0 0 7px}
+  .dbody p b{color:var(--blanco);font-weight:600}
+  .dbody .ex{border-left:2px solid var(--mostaza-dim);padding-left:10px;margin:0 0 8px}
+  .dbody .ask{font-size:13px;color:var(--mostaza);font-style:italic}
+  .tabs{display:flex;gap:6px;margin:10px 0 4px;flex-wrap:wrap}
+  .tabs button{background:transparent;border:1px solid var(--linea);color:var(--gris);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:6px;cursor:pointer}
+  .tabs button.on{background:var(--mostaza);border-color:var(--mostaza);color:var(--negro);font-weight:700}
+  .tp{display:none} .tp.on{display:block}
+
+  /* Tarea */
+  .tarea{background:var(--negro-2);border:1px solid var(--mostaza-dim);border-radius:14px;padding:16px 18px}
+  .tarea .cap{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mostaza);margin-bottom:6px}
+  .tarea h3{font-family:var(--serif);font-weight:600;font-size:clamp(18px,2.2vw,24px);line-height:1.15;margin-bottom:6px}
+  .tarea h3 .em{color:var(--mostaza)}
+  .tarea .lead2{font-size:14px;color:var(--gris);line-height:1.5;margin-bottom:12px}
+  .tarea .lead2 b{color:var(--blanco);font-weight:600}
+  .paso{margin-top:12px}
+  .paso .pl{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--mostaza);font-weight:700;margin-bottom:6px}
+  .paso .pl span{color:var(--gris);font-weight:500;letter-spacing:.02em;text-transform:none;margin-left:8px;font-family:var(--sans);font-size:13px}
+  .f2{display:grid;grid-template-columns:1fr 130px;gap:8px}
+  input.tx,textarea.tx{width:100%;background:var(--carbon);border:1px solid var(--linea);border-radius:8px;color:var(--blanco);font-family:var(--sans);font-size:14.5px;padding:9px 11px}
+  input.tx:focus,textarea.tx:focus{outline:none;border-color:var(--mostaza)}
+  input.tx::placeholder,textarea.tx::placeholder{color:#5a5a55}
+  textarea.tx{resize:vertical;min-height:84px;line-height:1.5}
+  .eur{display:flex;align-items:center;gap:6px}
+  .eur input{text-align:right;font-family:var(--mono)}
+  .eur .u{font-family:var(--mono);color:var(--gris);font-size:13px}
+  .sgs{display:flex;gap:6px;flex-wrap:wrap}
+  .sgs .chip{font-size:12.5px;padding:6px 11px}
+  .timer{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--carbon)}
+  .timer button{background:var(--mostaza);color:var(--negro);border:none;padding:12px 30px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:.12em;font-family:var(--mono);cursor:pointer}
+  .timer button.run{background:var(--carbon-2);color:var(--gris);border:1px solid var(--linea)}
+  .timer .t{font-size:56px;font-weight:700;font-family:var(--mono);color:var(--mostaza);line-height:1;letter-spacing:2px;display:none;font-variant-numeric:tabular-nums}
+  .timer .t.on{display:block} .timer .t.low{color:var(--rojo)}
+  .timer .fin{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--mostaza);display:none}
+  .timer .fin.on{display:block}
+
+  /* Modal */
+  .ov{position:fixed;inset:0;z-index:50;background:rgba(25,25,25,0.88);display:none;align-items:center;justify-content:center;padding:24px}
+  .ov.on{display:flex}
+  .box{background:var(--carbon-2);border:1px solid var(--mostaza);border-radius:16px;padding:32px 34px;max-width:560px;width:100%;position:relative;animation:modalIn .22s ease both}
+  @keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+  .box .x{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--gris);font-size:26px;cursor:pointer;line-height:1;font-family:var(--sans)}
+  .box .hd{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--linea);flex-wrap:wrap}
+  .box .hd .pill{background:rgba(240,195,26,0.12);border:1px solid rgba(240,195,26,0.25);border-radius:8px;padding:8px 12px;flex:1 1 40%}
+  .box .hd .pill .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gris);margin-bottom:2px}
+  .box .hd .pill .n{font-size:15px;font-weight:700;color:var(--blanco)}
+  .box .hd .por{font-size:22px;color:var(--mostaza-dim);font-weight:300}
+  .box .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--mostaza);margin-bottom:8px}
+  .box p.c{font-size:16px;line-height:1.75;color:var(--blanco)}
+  .box .ok{margin-top:16px;padding:9px 14px;background:rgba(240,195,26,0.08);border:1px solid rgba(240,195,26,0.2);border-radius:8px;font-size:12.5px;color:var(--gris);font-family:var(--mono);display:none}
+  .box .ok.on{display:block}
+  .box .cerrar{margin-top:20px;background:none;border:1px solid var(--linea);color:var(--gris);border-radius:6px;padding:9px 20px;font-size:12px;font-family:var(--mono);letter-spacing:.1em;cursor:pointer;display:block;width:100%}
+  .box .cerrar small{opacity:.6;margin-left:4px}
+
+  footer.brand{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza-dim)}
+</style>
+<style>:root{font-variant-numeric:tabular-nums}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Paso 6 · La psicología que convierte precios en imanes</div>
+    <h1>Matriz de <span class="em">sesgos × ángulos</span></h1>
+    <div class="lead">Cinco sesgos que mueven la decisión de compra y cinco mecanismos psicológicos (los ángulos) que los explican. Cada punto es una conexión: pasa el ratón para leerla y haz clic para ver el detalle. En modo prueba, elige un sesgo y adivina qué ángulos lo activan antes de revelarlos.</div>
+  </header>
+
+  <div class="ctrl">
+    <span class="lbl">Modo</span>
+    <button class="chip on" id="bExplorar" onclick="setQuiz(false)">Explorar</button>
+    <button class="chip" id="bPrueba" onclick="setQuiz(true)">Modo prueba</button>
+    <button class="chip ghost" id="bTodo" onclick="revealAll()" style="display:none">Revelar todo</button>
+    <button class="chip ghost" id="bReset" onclick="resetQuiz()" style="display:none">Reiniciar</button>
+  </div>
+  <div class="guia" id="guia">
+    <div class="pasos"><span><b>①</b>Selecciona un sesgo (fila)</span><span><b>②</b>Adivina qué ángulos lo activan</span><span><b>③</b>Clic en «?» para revelar y ver el detalle</span></div>
+    <div class="activo" id="activo"></div>
+  </div>
+
+  <section class="panel">
+    <div class="mtx" id="mtx"></div>
+    <div class="info" id="info"><span class="i">i</span><span id="infoTxt">Pasa el cursor sobre una celda con conexión para ver la descripción · Haz clic para abrir el detalle completo.</span></div>
+    <div class="leg"><span><span class="d"></span>Conexión</span><span id="legQ" style="display:none"><span class="q">?</span>Por revelar</span><span class="cnt" id="cnt"></span></div>
+  </section>
+
+  <div class="lower">
+    <section class="panel">
+      <div class="sec-t">Los ángulos y los sesgos, en detalle</div>
+      <div class="sec-s">Lo que se vio en la sala, para consultarlo cuando prepares un precio.</div>
+      <div class="tabs"><button class="on" onclick="showTab('ang',this)">Los 5 ángulos</button><button onclick="showTab('ses',this)">Los 5 sesgos</button></div>
+      <div class="tp on" id="tp-ang"></div>
+      <div class="tp" id="tp-ses"></div>
+    </section>
+
+    <section class="tarea">
+      <div class="cap">Ejercicio práctico · 5 min</div>
+      <h3>Aplícalo a <span class="em">tu negocio.</span></h3>
+      <div class="lead2">Elige <b>un producto o servicio</b> de tu cartera y diseña cómo presentarías su precio aplicando <b>uno o varios de los sesgos</b> de la matriz.</div>
+
+      <div class="paso"><div class="pl">PASO 1<span>Identifica el producto o servicio y su precio actual.</span></div>
+        <div class="f2"><input class="tx" id="tProd" placeholder="Producto o servicio"><div class="eur"><input class="tx" id="tPrecio" type="number" min="0" step="any" placeholder="0"><span class="u">€</span></div></div>
+      </div>
+      <div class="paso"><div class="pl">PASO 2<span>Elige uno o dos sesgos y redacta la nueva presentación del precio.</span></div>
+        <div class="sgs" id="tSesgos"></div>
+        <textarea class="tx" id="tTexto" style="margin-top:8px" placeholder="Cómo lo presentarías: qué ancla pones primero, qué opción hace de señuelo, qué es gratis, qué caduca, en qué marco se ve el precio…"></textarea>
+      </div>
+      <div class="paso"><div class="pl">PASO 3<span>Qué vas a probar primero y cuándo.</span></div>
+        <textarea class="tx" id="tPlan" style="min-height:60px" placeholder="Por ejemplo: la próxima propuesta que envíe, con el precio anterior tachado y validez hasta el viernes."></textarea>
+      </div>
+
+      <div class="timer">
+        <button id="tBtn" onclick="toggleTimer()">▶ INICIAR TEMPORIZADOR · 5 MIN</button>
+        <div class="t" id="tTime">05:00</div>
+        <div class="fin" id="tFin">TIEMPO · ¿QUÉ HAS DISEÑADO?</div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="brand">AMURAI · Taller Sistema de Precios</footer>
+</div>
+
+<div class="ov" id="ov" onclick="closeModal()">
+  <div class="box" onclick="event.stopPropagation()">
+    <button class="x" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <div class="hd">
+      <div class="pill"><div class="k" id="mSegK">SESGO</div><div class="n" id="mSegN"></div></div>
+      <div class="por">×</div>
+      <div class="pill"><div class="k" id="mMecK">ÁNGULO</div><div class="n" id="mMecN"></div></div>
+    </div>
+    <div class="cap">Por qué se conectan</div>
+    <p class="c" id="mConn"></p>
+    <div class="ok" id="mOk">✓ Conexión revelada correctamente</div>
+    <button class="cerrar" onclick="closeModal()">Cerrar <small>(ESC)</small></button>
+  </div>
+</div>
+
+<script>
+/* ═══ DATOS — los mismos de la presentación del Paso 6 (mecanismos, sesgos y conexiones) ═══ */
+const MECS=[
+  {id:1,abbr:"M1",name:"Heurística de ajuste",sub:"Heurística de ajuste",tag:"El ancla controla el ajuste",
+   txt:["El psicólogo Daniel Kahneman explica que el cerebro humano utiliza dos sistemas de pensamiento: Sistema 1 (Rápido y automático): toma el control al ver el primer precio de forma inconsciente. Sistema 2 (Lento y analítico): debería calcular el valor real, pero es perezoso.","En su lugar, el cerebro se cansa rápido y solo hace un pequeño ajuste mental a partir del ancla inicial, aceptando el precio final como justo.","La Heurística de ajuste es un atajo mental que usamos para estimar un valor desconocido de forma rápida, ahorrando así energía al cerebro."]},
+  {id:2,abbr:"M2",name:"Priming",sub:"Primado",tag:"El estímulo previo activa el marco",
+   txt:["El priming (o efecto de preactivación) es un fenómeno psicológico mediante el cual la exposición a un estímulo previo influye de forma inconsciente en cómo respondemos, pensamos o actuamos ante un estímulo posterior. En pocas palabras: prepara a tu mente para reaccionar de una manera determinada.","La primera información expuesta activa conceptos relacionados en la memoria. Un número alto inicial activa ideas de 'alta calidad' o 'exclusividad'.","El cerebro evalúa los siguientes precios bajo el filtro de esa primera impresión positiva."]},
+  {id:3,abbr:"M3",name:"Aversión a la pérdida",sub:"Aversión a la pérdida",tag:"Perder duele el doble que ganar",
+   txt:["La aversión a la pérdida es un sesgo cognitivo que describe la tendencia humana a sentir el dolor emocional de perder algo con una intensidad mucho mayor (hasta el doble) que el placer de ganar esa misma cosa.","Las personas odian perder más de lo que disfrutan ganar. Al ver un precio original alto y luego un descuento, el cerebro no ve un gasto.","El mecanismo interpreta que perderá la oportunidad de ahorrar dinero si no compra en ese momento."]},
+  {id:4,abbr:"M4",name:"Accesibilidad selectiva",sub:"Accesibilidad selectiva",tag:"El cerebro justifica lo que ya vio",
+   txt:["La hipótesis de la accesibilidad selectiva es un principio de la psicología cognitiva que explica por qué las personas nos dejamos influenciar por la primera información o valor inicial al tomar decisiones en situaciones de incertidumbre.","Al recibir el precio, el cerebro busca activamente argumentos que lo justifiquen. Si te muestran un artículo a precio alto (1.000), tu mente busca razones de por qué es caro: materiales, marca.","Cuando ves el modelo de 300€, tu mente ya está convencida de que los modelos de esa categoría son valiosos, haciendo que 300€ parezca una ganga."]},
+  {id:5,abbr:"M5",name:"Relatividad del valor",sub:"Relatividad del valor",tag:"El valor siempre es relativo",
+   txt:["La relatividad del valor explica cómo las personas evalúan el valor de las cosas comparándolas con alternativas, contextos o puntos de referencia, en lugar de hacerlo de manera absoluta.","El cerebro humano es incapaz de medir el valor absoluto de las cosas. No sabemos cuánto 'debe' costar un software o un café gourmet de forma aislada.","El mecanismo psicológico necesita comparar un objeto con otro cercano para decidir si es caro o barato."]},
+];
+
+const SEG=[
+  {id:1,name:"Efecto Anclaje",tag:"El primer número que ves es el que gobierna.",mecs:[2,5],
+   c:"Las personas se basan en la primera información recibida —el ancla— para tomar todas las decisiones posteriores sobre ese precio.",
+   exps:[{t:"Perlas Negras — Salvador Assael",d:"Nadie compraba perlas negras hasta que las exhibió en la Quinta Avenida con precio exorbitante junto a piedras preciosas. El ancla de lujo creó el mercado desde cero."},
+         {t:"Pujas del MIT — Dan Ariely",d:"Estudiantes anclados por los dos últimos dígitos de su número de seguridad social pujaron entre 216% y 346% más alto si esas cifras eran mayores."}],
+   ejs:[{t:"Precios tachados",d:"El precio original tachado actúa como ancla. El cerebro no ve que pagas 100€: ve que ahorras 100€. Ahorrar activa el sistema de recompensa.",a:"¿Mostráis el precio anterior tachado en vuestras propuestas? Sin esa referencia, perdéis una palanca de venta clave."},
+        {t:"Carta de restaurante",d:"El plato más caro al inicio de cada sección no está para venderse: está para hacer que todo lo demás parezca barato.",a:"¿Cuál es el primero de vuestros servicios en la web o en la propuesta? ¿Es el más caro?"},
+        {t:"Bonus valorado",d:'"Este servicio incluye X, Y, Z —valorado en 2.400€. Hoy trabajamos juntos por 890€." No has bajado el precio. Has establecido el ancla correcta antes de decirlo.',a:"Antes de decir tu precio, pon en valor todo lo que incluye."}],
+   tarea:"¿Cuál sería el ancla más potente en la presentación de uno de tus productos o servicios? ¿Qué pondrías como primera referencia de precio?"},
+  {id:2,name:"Efecto Señuelo",tag:"Diseña la trampa inteligente.",mecs:[4,2],
+   c:"Utilizar varias alternativas (señuelo) para que el cliente elija la más interesante para él —y para ti.",
+   exps:[{t:"The Economist — Dan Ariely",d:"Online $59 → 68% elige esta. Impresa $125 → casi nadie. Online + Impresa $125 → 84% elige esta. La opción 'Impresa' (señuelo) influyó al 52% a elegir la opción más cara y completa."}],
+   ejs:[{t:"Planes de servicio B2B",d:"Plan Básico 29€ | Plan Señuelo 79€ | Plan Pro 89€. Por 10€ más tienes el doble. El señuelo existe para que el Pro sea la elección obvia.",a:"¿Tenéis un señuelo en vuestras tarifas que empuje hacia el plan de mayor margen?"},
+        {t:"Tamaños (palomitas, cafetería)",d:"Pequeño 3€ | Mediano señuelo 5,50€ | Grande 6€. El mediano está tan cerca del grande que el grande parece un regalo.",a:"Si vendéis formatos o paquetes de horas de servicio, este esquema es directamente aplicable."},
+        {t:"Seguros y coberturas",d:"Básica 40€ | Señuelo 120€ | Premium 130€. Por 10€ más, acceso total. El señuelo hace que el Premium parezca casi gratis.",a:"¿Tenéis un servicio que podría actuar como señuelo hacia el de mayor margen?"}],
+   tarea:"Diseña 3 niveles de precio para un servicio tuyo. ¿Cuál es el señuelo? ¿Cuál la opción que realmente quieres que elijan?"},
+  {id:3,name:"Efecto Precio Cero",tag:"Cero no es un precio bajo. Es una categoría psicológica distinta.",mecs:[1,5],
+   c:"El potente impacto de la oferta gratuita/coste cero. Las personas valoran irracionalmente más lo gratis.",
+   exps:[{t:"Chocolates Hershey vs. Lindt — Dan Ariely",d:"Trufas Lindt (15¢) vs. Kisses Hershey (1¢): 73% eligen Lindt. Al bajar un céntimo: Lindt 14¢ vs. Hershey GRATIS → 69% eligen Hershey. Solo el 'gratis' les impedía considerar otras alternativas."}],
+   ejs:[{t:"Freemium (Spotify, apps)",d:"El modelo freemium elimina la barrera de entrada. La captación es masiva porque el coste inicial es cero. La conversión ocurre cuando el usuario ya experimentó el valor.",a:"¿Podéis ofrecer una versión de entrada a 0€ que permita experimentar el valor antes de pagar?"},
+        {t:"Envío gratis + umbral",d:'"Te faltan 12€ para el envío gratis." El cliente gasta más para conseguirlo. El efecto psicológico del cero supera cualquier descuento de precio equivalente.',a:"¿Qué podéis ofrecer gratis a partir de un volumen mínimo de pedido?"},
+        {t:'"Recupera tu dinero"',d:"Cuota recuperable si: entrenas 3×/semana + compartes rutinas en redes + recomiendas un cliente. El cliente percibe el coste como un reto reversible, no como un gasto.",a:"¿Cómo convertirías el precio de tu servicio en un reto con recompensa?"}],
+   tarea:"¿Qué elemento de tu oferta podrías presentar como gratuito para reducir la fricción de entrada? ¿Freemium / Envío gratis / Recupera tu dinero / Precios ascendentes?"},
+  {id:4,name:"Desidia",tag:"La inacción es el enemigo. Diseña la urgencia.",mecs:[3,1],
+   c:"Tendencia a evitar tomar decisiones o actuar, prefiriendo la inacción o la inercia. La paradoja de la elección.",
+   exps:[{t:"Trabajos del MIT — Dan Ariely",d:"Grupos de estudiantes con distintas libertades de entrega: más libertad = peores resultados, fechas impuestas = mejores resultados. Sin estructura externa, la desidia gana siempre."}],
+   ejs:[{t:"Límite de tiempo",d:'"Esta propuesta tiene validez hasta el viernes 30." Una propuesta sin fecha de caducidad es una propuesta que el cliente puede posponer indefinidamente.',a:"Poned fecha de vigencia a vuestros presupuestos. Y cumplidla."},
+        {t:"Escasez de plazas",d:'"Quedan 3 plazas disponibles." Las plazas limitadas son reales si el servicio tiene capacidad real. Y si es real, hay que comunicarlo.',a:"¿Cuántas personas puede atender tu servicio simultáneamente? Eso es tu escasez real."},
+        {t:"Early Bird / Precios ascendentes",d:"Lanzamiento 97€ → Tras 50 compradores: 147€ → Precio final: 197€. No es urgencia artificial: es la mecánica del sistema.",a:"¿Podéis estructurar vuestro próximo lanzamiento con precios ascendentes?"}],
+   tarea:"¿Cuál de las palancas puedes usar? Límite de tiempo / Escasez de unidades / Early Bird. Diseña en tu libreta cómo quedaría la oferta."},
+  {id:5,name:"Efecto Encuadre",tag:"No cambies el precio. Cambia el marco en el que se ve.",mecs:[5,4],
+   c:"La forma en que se presenta la información influye en las decisiones. La misma información parece más o menos atractiva según cómo se enmarque.",
+   exps:[{t:"El mismo dato, decisiones distintas",d:'"5% de grasa" vs. "95% libre de grasa" → mismo yogur. "90% de supervivencia" vs. "10% de mortalidad" → mismo dato médico. El encuadre cambia la decisión sin cambiar la realidad.'}],
+   ejs:[{t:"Precio diario vs. anual",d:'360€/año → "parece mucho." "Menos de 1€ al día" → no frena nada. El número es idéntico. El encuadre activa respuestas emocionales completamente distintas.',a:"¿Cómo presentáis vuestros precios de suscripción o mantenimiento en las propuestas?"},
+        {t:"Coste vs. ahorro/riesgo",d:'"Coste 4.800€/año" vs. "Evita averías de 12.000€–40.000€/año." No has cambiado nada. Has cambiado el marco: de gasto a seguro de riesgo.',a:"Aplicable directamente a mantenimiento, consultoría, prevención y gestión de riesgo."},
+        {t:"Precio por usuario",d:'"6.000€ la formación" vs. "300€ por persona, menos que un curso online individual." La comparación por usuario activa un nuevo punto de referencia.',a:"¿Cuántos usuarios tiene vuestro servicio? Dividir el precio puede cambiarlo todo."}],
+   tarea:"Toma uno de tus precios actuales y reescríbelo con 2 encuadres distintos. ¿Precio/día? ¿Ahorro/riesgo? ¿Por usuario? ¿Cuál es más potente?"},
+];
+
+const CONN={
+  "1-2":"El Priming activa conceptos de exclusividad antes de ver el precio real, condicionando toda la evaluación posterior.",
+  "1-5":"El Anclaje crea la referencia comparativa que define si algo parece caro o barato.",
+  "2-4":"La Accesibilidad Selectiva busca argumentos para justificar elegir el premium; el señuelo se los facilita.",
+  "2-2":"El Priming activa el concepto 'relación calidad-precio' al percibir el señuelo.",
+  "3-1":"El precio cero activa el Sistema 1 sin fricción: decisión inmediata, sin análisis.",
+  "3-5":"Comparar 'algo gratis' vs. 'pagar algo' magnifica el valor percibido del elemento gratuito.",
+  "4-3":"La Aversión a la Pérdida es el antídoto de la Desidia: 'si no decido ahora, pierdo la oportunidad.'",
+  "4-1":"Simplificar la decisión activa el Sistema 1 rápido, en lugar del Sistema 2 que pospone.",
+  "5-5":"El Encuadre proporciona la referencia comparativa desde la que el precio se evalúa.",
+  "5-4":"El Marco activa los argumentos con los que el cerebro justifica la decisión de compra.",
+};
+const TOTAL=Object.keys(CONN).length;
+const isConn=(s,m)=>!!CONN[s+'-'+m];
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ═══ ESTADO ═══ */
+let quiz=false, row=null, revealed=new Set();
+
+/* ═══ MATRIZ ═══ */
+function renderMatrix(){
+  let h='<table class="m"><thead><tr><th class="corner">SESGO →</th>';
+  MECS.forEach(m=>{ h+='<th><div class="mh"><div class="ab">'+m.abbr+'</div><div class="nm">'+esc(m.sub)+'</div></div></th>'; });
+  h+='</tr></thead><tbody>';
+  SEG.forEach(s=>{
+    const revN=s.mecs.filter(m=>revealed.has(s.id+'-'+m)).length, done=quiz&&revN===s.mecs.length;
+    h+='<tr><td style="padding:0"><div class="sg'+(row===s.id?' sel':'')+(done?' done':'')+'" data-row="'+s.id+'"><div><div class="id">S'+s.id+'</div><div class="nm">'+esc(s.name.replace('Efecto ',''))+'</div></div><span class="ok">✓</span></div></td>';
+    MECS.forEach(m=>{
+      const conn=isConn(s.id,m.id), key=s.id+'-'+m.id, revd=revealed.has(key), show=!quiz||revd;
+      let cls='cell', inner='';
+      if(conn&&show){ cls+=' conn'; inner='<span class="dot"></span>'; }
+      else if(quiz&&row===s.id&&conn){ cls+=' hidden-q'; inner='<span class="q">?</span>'; }
+      h+='<td style="padding:0"><div class="'+cls+'" data-s="'+s.id+'" data-m="'+m.id+'">'+inner+'</div></td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('mtx').innerHTML=h;
+  document.getElementById('cnt').textContent=quiz?(revealed.size+' de '+TOTAL+' reveladas'):(TOTAL+' conexiones');
+  document.getElementById('legQ').style.display=quiz?'inline':'none';
+  const act=document.getElementById('activo');
+  if(quiz&&row){ const s=SEG.find(x=>x.id===row); act.innerHTML='Sesgo activo: <strong>'+esc(s.name)+'</strong> <span style="color:var(--gris);margin-left:10px">'+s.mecs.filter(m=>revealed.has(row+'-'+m)).length+' / '+s.mecs.length+' reveladas</span>'; }
+  else act.innerHTML=quiz?'Elige un sesgo en la primera columna.':'';
+}
+document.getElementById('mtx').addEventListener('click',e=>{
+  const sg=e.target.closest('.sg');
+  if(sg&&quiz){ const id=+sg.dataset.row; row=(row===id?null:id); renderMatrix(); return; }
+  const c=e.target.closest('.cell'); if(!c)return;
+  const s=+c.dataset.s, m=+c.dataset.m, key=s+'-'+m;
+  if(!isConn(s,m))return;
+  if(quiz){
+    if(row===s&&!revealed.has(key)){ revealed.add(key); renderMatrix();
+      const nc=document.querySelector('.cell[data-s="'+s+'"][data-m="'+m+'"]'); if(nc)nc.classList.add('flash');
+      openModal(s,m,true); }
+    else if(revealed.has(key)) openModal(s,m,false);
+  } else openModal(s,m,false);
+});
+document.getElementById('mtx').addEventListener('mouseover',e=>{
+  const c=e.target.closest('.cell'); const info=document.getElementById('info'), t=document.getElementById('infoTxt');
+  if(c&&c.classList.contains('conn')){
+    const s=SEG.find(x=>x.id===+c.dataset.s), m=MECS.find(x=>x.id===+c.dataset.m);
+    info.classList.add('on'); t.innerHTML='<b>'+esc(s.name)+' × '+esc(m.name)+':</b> '+esc(CONN[c.dataset.s+'-'+c.dataset.m])+'<small>(clic para más detalle)</small>';
+  }
+});
+document.getElementById('mtx').addEventListener('mouseout',e=>{
+  if(e.target.closest('.cell')){ document.getElementById('info').classList.remove('on');
+    document.getElementById('infoTxt').textContent=quiz?'Elige un sesgo y pulsa en «?» para revelar cada conexión.':'Pasa el cursor sobre una celda con conexión para ver la descripción · Haz clic para abrir el detalle completo.'; }
+});
+
+function setQuiz(on){
+  quiz=on; if(on){ revealed=new Set(); row=null; }
+  document.body.classList.toggle('quiz',on);
+  document.getElementById('bExplorar').classList.toggle('on',!on);
+  document.getElementById('bPrueba').classList.toggle('on',on);
+  document.getElementById('bTodo').style.display=on?'':'none';
+  document.getElementById('bReset').style.display=on?'':'none';
+  document.getElementById('guia').classList.toggle('on',on);
+  document.getElementById('infoTxt').textContent=on?'Elige un sesgo y pulsa en «?» para revelar cada conexión.':'Pasa el cursor sobre una celda con conexión para ver la descripción · Haz clic para abrir el detalle completo.';
+  renderMatrix();
+}
+function revealAll(){ revealed=new Set(Object.keys(CONN)); renderMatrix(); }
+function resetQuiz(){ revealed=new Set(); row=null; renderMatrix(); }
+
+/* ═══ MODAL ═══ */
+function openModal(s,m,revealedNow){
+  const seg=SEG.find(x=>x.id===s), mec=MECS.find(x=>x.id===m);
+  document.getElementById('mSegK').textContent='SESGO '+seg.id; document.getElementById('mSegN').textContent=seg.name;
+  document.getElementById('mMecK').textContent='ÁNGULO '+mec.abbr; document.getElementById('mMecN').textContent=mec.name;
+  document.getElementById('mConn').textContent=CONN[s+'-'+m];
+  document.getElementById('mOk').classList.toggle('on',!!revealedNow);
+  document.getElementById('ov').classList.add('on');
+}
+function closeModal(){ document.getElementById('ov').classList.remove('on'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+
+/* ═══ DETALLE: ÁNGULOS Y SESGOS ═══ */
+function renderDetail(){
+  document.getElementById('tp-ang').innerHTML=MECS.map(m=>
+    '<details><summary><span class="k">'+m.abbr+'</span><span class="t">'+esc(m.name)+'</span><span class="g">'+esc(m.tag)+'</span><span class="arr">▾</span></summary>'+
+    '<div class="dbody"><h4>Concepto</h4>'+m.txt.map(p=>'<p>'+esc(p)+'</p>').join('')+
+    '<h4>Sesgos que lo activan</h4><p>'+SEG.filter(s=>s.mecs.includes(m.id)).map(s=>'<b>'+esc(s.name)+'</b>').join(' · ')+'</p></div></details>').join('');
+  document.getElementById('tp-ses').innerHTML=SEG.map(s=>
+    '<details><summary><span class="k">S'+s.id+'</span><span class="t">'+esc(s.name)+'</span><span class="g">'+esc(s.tag)+'</span><span class="arr">▾</span></summary>'+
+    '<div class="dbody"><h4>Concepto</h4><p>'+esc(s.c)+'</p>'+
+    '<h4>Evidencia científica</h4>'+s.exps.map(e=>'<div class="ex"><p><b>'+esc(e.t)+'</b> — '+esc(e.d)+'</p></div>').join('')+
+    '<h4>Aplicación directa</h4>'+s.ejs.map(e=>'<div class="ex"><p><b>'+esc(e.t)+'.</b> '+esc(e.d)+'</p><p class="ask">'+esc(e.a)+'</p></div>').join('')+
+    '<h4>Ángulos que lo explican</h4><p>'+s.mecs.map(id=>{const m=MECS.find(x=>x.id===id);return '<b>'+m.abbr+' · '+esc(m.name)+'</b>';}).join(' · ')+'</p>'+
+    '<h4>Tarea</h4><p>'+esc(s.tarea)+'</p></div></details>').join('');
+}
+function showTab(id,btn){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.toggle('on',p.id==='tp-'+id));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b===btn));
+}
+
+/* ═══ TAREA: chips de sesgos + temporizador ═══ */
+document.getElementById('tSesgos').innerHTML=SEG.map(s=>'<button class="chip" onclick="this.classList.toggle(\'on\')">'+esc(s.name.replace('Efecto ',''))+'</button>').join('');
+let tIv=null, tRem=300;
+function fmt(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
+function toggleTimer(){
+  const b=document.getElementById('tBtn'), t=document.getElementById('tTime'), f=document.getElementById('tFin');
+  if(tIv){ clearInterval(tIv); tIv=null; tRem=300; b.textContent='▶ INICIAR TEMPORIZADOR · 5 MIN'; b.classList.remove('run'); t.classList.remove('on','low'); f.classList.remove('on'); return; }
+  tRem=300; t.textContent=fmt(tRem); t.classList.add('on'); t.classList.remove('low'); f.classList.remove('on');
+  b.textContent='■ PARAR'; b.classList.add('run');
+  tIv=setInterval(()=>{ tRem--; t.textContent=fmt(Math.max(tRem,0)); if(tRem<60)t.classList.add('low');
+    if(tRem<=0){ clearInterval(tIv); tIv=null; f.classList.add('on'); b.textContent='↻ REINICIAR'; b.classList.remove('run'); } },1000);
+}
+
+renderMatrix(); renderDetail();
+// Precarga por hash (desde la portada o un enlace): matriz_sesgos.html#prueba abre en modo prueba
+if(location.hash==='#prueba') setQuiz(true);
+</script>
+</body>
+</html>
