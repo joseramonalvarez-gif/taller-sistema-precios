@@ -1,7 +1,7 @@
 # Sistema de Precios — Taller AMURAI
 
-Material para los asistentes del taller **Sistema de Precios**, impartido por
-AMURAI en la Cámara de Comercio de Granada.
+Material para los asistentes del taller presencial **Sistema de Precios**,
+impartido por AMURAI. Vale para cualquier edición, sea cual sea la sede.
 
 **Acceso:** https://joseramonalvarez-gif.github.io/taller-sistema-precios/
 
